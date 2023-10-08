@@ -37,7 +37,7 @@ pip install .
 
 ### Usage
 
-```shell
+```
 usage: gitgrove COMMAND
 
 optional arguments:
