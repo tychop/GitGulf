@@ -22,7 +22,7 @@ GitGrove is a command-line tool designed to help you manage and navigate through
 Clone the GitGrove repository.
 
 ```shell
-git clone [repository_url]
+git clone https://github.com/tychop/gitgrove.git
 ```
 
 Install GitGrove
