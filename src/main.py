@@ -17,7 +17,7 @@ def show_usage():
         -s, --status       : Show all the repository statuses.
         -f, --fetch        : Fetch all repositories.
         -p, --pull         : Pull all repositories.
-        -pr, --prune       : Prune all reachable objects in the object databases.
+        -pr, --prune       : Prunes objects that are no longer reachable.
         -c, --cleanup      : Clean up and optimize the local repositories.
         -b, --branch BRANCH: Switch all repositories to a specified branch.
         -d, --development  : Switch all repositories to the development branch.
@@ -27,7 +27,7 @@ def show_usage():
         ggs       : Show all the repository statuses.
         ggf       : Fetch all repositories.
         ggp       : Pull all repositories.
-        ggpr      : Prune all reachable objects in the object databases.
+        ggpr      : Prunes objects that are no longer reachable.
         ggc       : Clean up and optimize the local repositories.
         ggb BRANCH: Switch all repositories to a specified branch.
         ggd       : Switch all repositories to the development branch.

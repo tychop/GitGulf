@@ -44,7 +44,7 @@ optional arguments:
   -s, --status          Show all the repository statuses in the current directory.
   -f, --fetch           Fetch all repositories in the current directory.
   -p, --pull            Pull all repositories in the current directory.
-  -pr, --prune          Prune all reachable objects in the object database of all repositories in the current directory.
+  -pr, --prune          Prunes objects that are no longer reachable from all repositories in the current directory.
   -c, --cleanup         Clean up and optimize the local repositories in the current directory.
   -b, --branch BRANCH   Attempt to switch branch of all repositories to BRANCH.
   -d, --development     Attempt to switch branch of all repositories to development.

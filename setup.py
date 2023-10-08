@@ -19,7 +19,7 @@ setup(
         ],
     },
     author='Tycho Pandelaar',
-    author_email='fairest.09trough@icloud.com',
+    author_email='tychop@me.com',
     description='A CLI tool for managing multiple Git repositories collectively.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
