@@ -1,5 +1,8 @@
 import unittest
-from table import Table, Cell, TableRenderer
+from src.table import (
+    Table, TableRenderer, Cell, ANSI_BOLD_BRIGHT_WHITE, ANSI_WHITE,
+    ANSI_RED, ANSI_GREEN, ANSI_CYAN, ANSI_PURPLE, ANSI_GREY
+)
 
 
 class TestCell(unittest.TestCase):
