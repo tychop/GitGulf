@@ -25,13 +25,9 @@ pip install gitgrove
 ```
 
 ### Install from this repo
-Clone the GitGrove repository.
+Clone the gitgrove repository and run pip install on it:.
 ```shell
 git clone https://github.com/tychop/gitgrove.git
-```
-
-Install
-```shell
 cd gitgrove
 pip install .
 ```
