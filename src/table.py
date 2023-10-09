@@ -1,4 +1,5 @@
 import re
+import shutil
 
 # ANSI Escape Codes for colors
 ANSI_RESET = "\033[0m"
@@ -125,10 +126,9 @@ class TableRenderer:
         Returns:
             str: The rendered table string.
         """
-        header_row_str = self._generate_row_string(self.table.header_row, " ")
-        separator_str = self._generate_separator_string()
-        data_rows_str = '\n'.join(
-            self._generate_row_string(row, PADDING_CHAR) for row in self.table.rows)
+        header_row_str = self._postfix_line(self._generate_row_string(self.table.header_row, " "))
+        separator_str = self._postfix_line(self._generate_separator_string())
+        data_rows_str = '\n'.join(self._postfix_line(self._generate_row_string(row, PADDING_CHAR)) for row in self.table.rows)
         return f"{header_row_str}\n{separator_str}\n{data_rows_str}"
 
     # ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -149,7 +149,52 @@ class TableRenderer:
         ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
         return ansi_escape.sub('', input_string)
 
-    def _generate_colored_content(self, string, color):
+    def _get_terminal_width(self):
+        """
+        Retrieve the current terminal's width in columns.
+
+        This method utilizes the `shutil.get_terminal_size()` function to determine
+        the width of the terminal. It should be platform-independent and work on both
+        Unix-like systems and Windows.
+
+        Returns:
+            int: The width of the terminal in columns.
+
+        Raises:
+            OSError: If the terminal size cannot be determined.
+        """
+        return shutil.get_terminal_size().columns
+
+    def _postfix_line(self, string):
+        """
+        Appends spaces to the end of the given string until it reaches the width
+        of the terminal.
+
+        This method determines the number of spaces required to make the string
+        length equal to the terminal width, taking into account any ANSI color
+        codes that may be present in the string. The result is a string that,
+        when printed, will occupy the entire width of the terminal.
+
+        Args:
+            string (str): The input string to which spaces will be appended.
+
+        Returns:
+            str: The input string postfixed with the required number of spaces
+                 to make its printed length equal to the terminal width.
+
+        Note:
+            This method relies on the `_get_terminal_width` method to determine
+            the width of the terminal and the `_remove_ansi_codes` method to
+            calculate the printed length of the string without ANSI codes.
+        """
+        terminal_width = self._get_terminal_width()
+        space_taken = len(self._remove_ansi_codes(string))
+        space_left = terminal_width - space_taken
+        postfix = " " * space_left
+
+        return string + postfix
+
+    def _colored_string(self, string, color):
         """
         Wrap a string with ANSI escape codes to apply color.
 
@@ -162,7 +207,7 @@ class TableRenderer:
         """
         return color + string + ANSI_RESET
 
-    def _generate_padding_string(self, padding, width, string_length):
+    def _padding_string(self, padding, width, string_length):
         """
         Generate a string for padding, considering available space and applying color.
 
@@ -190,7 +235,7 @@ class TableRenderer:
         Returns:
             str: The left-aligned string.
         """
-        content_padding = self._generate_padding_string(
+        content_padding = self._padding_string(
             padding, width, len(self._remove_ansi_codes(content)))
         result = (content + content_padding).replace(PADDING_CHAR, " ", 1)
         return result
@@ -207,7 +252,7 @@ class TableRenderer:
         Returns:
             str: The right-aligned string.
         """
-        padding = self._generate_padding_string(
+        padding = self._padding_string(
             padding, width, len(self._remove_ansi_codes(content)))
         result = padding + content
         if self._remove_ansi_codes(content).isdigit():
@@ -231,7 +276,7 @@ class TableRenderer:
         if string == PADDING_CHAR:
             return self.padding_color + \
                 (padding_char * width) + ANSI_RESET
-        content = self._generate_colored_content(string, color)
+        content = self._colored_string(string, color)
         padding = padding_char * width
         if justify == "left":
             return self._align_left(content, padding, width)

@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -21,6 +22,12 @@ class GitRepoManager:
         """
         base_directory = os.getcwd()
         repo_paths = self._get_repo_paths(base_directory)
+
+        if not repo_paths:
+            print(
+                "Exiting. Gitgrove can't find any git repositories in the current directory.")
+            sys.exit(1)
+
         self.repos = self._initialize_repos(base_directory, repo_paths)
         self._sort_repos()
         self._reset_completed_flags(with_value=False)
@@ -182,10 +189,6 @@ class GitRepoManager:
         Returns:
             list[GitRepo]: A list of initialized GitRepo instances.
         """
-        if not repo_paths:
-            # No repositories found, return an empty list or raise a custom error
-            return []
-
         with ThreadPoolExecutor(max_workers=len(repo_paths)) as executor:
             futures = [
                 executor.submit(GitRepo, base_directory, relative_path)
