@@ -1,10 +1,10 @@
 import os
 import sys
-import time
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from src.repository import GitRepo
-from src.table import Table, TableRenderer, Cell, ANSI_BOLD_BRIGHT_WHITE, ANSI_WHITE, ANSI_RED, ANSI_GREEN, ANSI_CYAN, ANSI_PURPLE, ANSI_GREY, ANSI_BRIGHT_YELLOW
+from src.table import Table, TableRenderer, Cell, ANSI_BOLD_BRIGHT_WHITE, ANSI_WHITE, ANSI_RED, ANSI_GREEN, ANSI_CYAN,
+											ANSI_PURPLE, ANSI_GREY
 
 
 class GitRepoManager:

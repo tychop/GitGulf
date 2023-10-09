@@ -79,13 +79,6 @@ class GitRepo:
             cwd=self.path
         )
 
-        if result.returncode != 0:
-            # The git command failed.
-            # Log or handle the error message from `result.stderr`.
-            error_message = result.stderr.decode('utf-8').strip()
-            # Optionally: Log the error message if a logging system is utilized.
-            # Example: logging.error(f"Git command {' '.join(args)} failed: {error_message}")
-
         return result.stdout.decode('utf-8').strip()
 
     def _get_branch_name(self):
@@ -128,11 +121,11 @@ class GitRepo:
             # Extract the number of changes in the staging environment.
             try:
                 self.staging = len(status_output.splitlines()) - 1
-            except Exception as e:
+            except Exception:
                 self.staging = 0
                 # Optionally: log the error if a logging system is utilized.
 
-        except Exception as e:
+        except Exception:
             # General error handling for any other unexpected issue.
             self.ahead, self.behind, self.staging = 0, 0, 0
             # Optionally: log the error if a logging system is utilized.
