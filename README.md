@@ -19,6 +19,13 @@ GitGrove is a command-line tool designed to help you manage and navigate through
 
 ## Installation
 
+### Install using pip
+
+```shell
+pip install gitgrove
+```
+
+### Install from this repo
 Clone the GitGrove repository.
 
 ```shell
