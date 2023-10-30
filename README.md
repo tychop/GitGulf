@@ -39,16 +39,29 @@ pip install .
 ### Usage
 
 ```
-usage: gitgrove COMMAND
+gitripple COMMAND
 
-optional arguments:
-  -s, --status          Show all the repository statuses in the current directory.
-  -f, --fetch           Fetch all repositories in the current directory.
-  -p, --pull            Pull all repositories in the current directory.
-  -pr, --prune          Prunes objects that are no longer reachable from all repositories in the current directory.
-  -c, --cleanup         Clean up and optimize the local repositories in the current directory.
-  -b, --branch BRANCH   Attempt to switch branch of all repositories to BRANCH.
-  -d, --development     Attempt to switch branch of all repositories to development.
+or use one of the shortcuts:
+    gr COMMAND, grs, grf, grp, grpr, grc, grb BRANCH, grd
+
+Commands:
+    -s, --status       : Show all the repository statuses.
+    -f, --fetch        : Fetch all repositories.
+    -p, --pull         : Pull all repositories.
+    -pr, --prune       : Prunes objects that are no longer reachable.
+    -c, --cleanup      : Clean up and optimize the local repositories.
+    -b, --branch BRANCH: Switch all repositories to a specified branch.
+    -d, --development  : Switch all repositories to the development branch.
+
+Shortcuts:
+    gr        : Same as gitripple.
+    grs       : Show all the repository statuses.
+    grf       : Fetch all repositories.
+    grp       : Pull all repositories.
+    grpr      : Prunes objects that are no longer reachable.
+    grc       : Clean up and optimize the local repositories.
+    grb BRANCH: Switch all repositories to a specified branch.
+    grd       : Switch all repositories to the development branch.
 ```
 
 ### Contributing
