@@ -1,12 +1,12 @@
-# GitGrove
+# GitRipple
 
-Manage your forest of Git repositories with ease.
+Manage your ocean of Git repositories with ease.
 
-![Logo](img/gitgrove.png)
+![Logo](img/gitripple.png)
 
 ## Overview
 
-GitGrove is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a forest of repositories, GitGrove aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
+GitRipple is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a wave of repositories, GitRipple aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
 ## Features
 
@@ -21,14 +21,14 @@ GitGrove is a command-line tool designed to help you manage and navigate through
 
 ### Install using pip
 ```shell
-pip install gitgrove
+pip install gitripple
 ```
 
 ### Install from this repo
-Clone the gitgrove repository and run pip install on it:.
+Clone the gitripple repository and run pip install on it:.
 ```shell
-git clone https://github.com/tychop/gitgrove.git
-cd gitgrove
+git clone https://github.com/tychop/gitripple.git
+cd gitripple
 pip install .
 ```
 
