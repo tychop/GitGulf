@@ -70,7 +70,7 @@ We welcome contributions to GitGrove! Please see our Contributing Guide for more
 
 ### License
 
-GitGrove is MIT licensed.
+GitRipple is MIT licensed.
 
 ### Acknowledgements
 
