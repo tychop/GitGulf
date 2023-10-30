@@ -1,5 +1,5 @@
 import sys
-from src.repository_manager import GitRepoManager
+from gitripple.repository_manager import GitRepoManager
 
 
 def show_usage():

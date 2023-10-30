@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "gitripple"
+version = "0.1.0"
+description = "A CLI tool for managing multiple Git repositories collectively."
+authors = ["Tycho Pandelaar <tychop@me.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/tychop/gitripple"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.scripts]
+gitripple = "gitripple.main:main"
+gr = "gitripple.main:main"
+grs = "gitripple.main:main_s"
+grf = "gitripple.main:main_f"
+grp = "gitripple.main:main_p"
+grpr = "gitripple.main:main_pr"
+grc = "gitripple.main:main_c"
+grb = "gitripple.main:main_b"
+grd = "gitripple.main:main_d"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
