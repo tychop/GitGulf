@@ -1,12 +1,12 @@
-# GitRipple
+# GitGulf
 
 Manage your ocean of Git repositories with ease.
 
-![Logo](img/gitripple.png)
+![Logo](img/gitgulf.png)
 
 ## Overview
 
-GitRipple is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a wave of repositories, GitRipple aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
+GitGulf is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a collection of repositories, GitGulf aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
 ## Features
 
@@ -21,14 +21,14 @@ GitRipple is a command-line tool designed to help you manage and navigate throug
 
 ### Install using pip
 ```shell
-pip install gitripple
+pip install gitgulf
 ```
 
 ### Install from this repo
-Clone the gitripple repository and run pip install on it:.
+Clone the gitgulf repository and run pip install on it:.
 ```shell
-git clone https://github.com/tychop/gitripple.git
-cd gitripple
+git clone https://github.com/tychop/gitgulf.git
+cd gitgulf
 pip install .
 ```
 
@@ -39,10 +39,10 @@ pip install .
 ### Usage
 
 ```
-gitripple COMMAND
+gitgulf COMMAND
 
 or use one of the shortcuts:
-    gr COMMAND, grs, grf, grp, grpr, grc, grb BRANCH, grd
+    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggd
 
 Commands:
     -s, --status       : Show all the repository statuses.
@@ -54,23 +54,23 @@ Commands:
     -d, --development  : Switch all repositories to the development branch.
 
 Shortcuts:
-    gr        : Same as gitripple.
-    grs       : Show all the repository statuses.
-    grf       : Fetch all repositories.
-    grp       : Pull all repositories.
-    grpr      : Prunes objects that are no longer reachable.
-    grc       : Clean up and optimize the local repositories.
-    grb BRANCH: Switch all repositories to a specified branch.
-    grd       : Switch all repositories to the development branch.
+    gg        : Same as 'gitgulf'.
+    ggs       : Show all the repository statuses.
+    ggf       : Fetch all repositories.
+    ggp       : Pull all repositories.
+    ggpr      : Prunes objects that are no longer reachable.
+    ggc       : Clean up and optimize the local repositories.
+    ggb BRANCH: Switch all repositories to a specified branch.
+    ggd       : Switch all repositories to the development branch.
 ```
 
 ### Contributing
 
-We welcome contributions to GitGrove! Please see our Contributing Guide for more details.
+We welcome contributions to GitGulf! Please see our Contributing Guide for more details.
 
 ### License
 
-GitRipple is MIT licensed.
+GitGulf is MIT licensed.
 
 ### Acknowledgements
 
