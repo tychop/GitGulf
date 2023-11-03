@@ -1,4 +1,5 @@
 import sys
+import time
 from gitgulf.repository_manager import GitRepoManager
 
 
@@ -45,15 +46,30 @@ def main():
 
     # Check the provided arguments and call the corresponding method from GitRepoManager
     command = sys.argv[1]
+
+    start_time = time.time()  # Capture the start time before the operation
+
+    operation_description = ""  # Variable to hold the operation description
+
     if command in ['-s', '--status']:
+        operation_description = "status check"
+        print(f"\nGitGulf {operation_description}")
         manager.status()
     elif command in ['-f', '--fetch']:
+        operation_description = "fetch operation"
+        print(f"\nGitGulf {operation_description}")
         manager.fetch()
     elif command in ['-p', '--pull']:
+        operation_description = "pull operation"
+        print(f"\nGitGulf {operation_description}")
         manager.pull()
     elif command in ['-pr', '--prune']:
+        operation_description = "prune operation"
+        print(f"\nGitGulf {operation_description}")
         manager.prune()
     elif command in ['-c', '--cleanup']:
+        operation_description = "cleanup operation"
+        print(f"\nGitGulf {operation_description}")
         manager.cleanup()
     elif command in ['-b', '--branch']:
         # Ensure branch name is provided
@@ -61,12 +77,22 @@ def main():
             print("Error: BRANCH is required for -b/--branch")
             sys.exit(1)
         branch = sys.argv[2]
+        operation_description = f"switching to branch {branch}"
+        print(f"\nGitGulf {operation_description}")
         manager.switch_branch(branch=branch)
     elif command in ['-d', '--development']:
+        operation_description = "switching to development branch"
+        print(f"\nGitGulf {operation_description}")
         manager.switch_branch(branch='development')
     else:
         show_usage()
         sys.exit(1)
+
+    # Calculate the elapsed time after the operation
+    elapsed_time = time.time() - start_time
+    # Display the elapsed time
+    print(
+        f"{operation_description.capitalize()} took {elapsed_time:.2f} seconds to complete.")
 
 
 def main_s():

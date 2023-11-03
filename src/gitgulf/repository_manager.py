@@ -2,8 +2,8 @@ import os
 import sys
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from gitripple.repository import GitRepo
-from gitripple.table import (
+from gitgulf.repository import GitRepo
+from gitgulf.table import (
     Table, TableRenderer, Cell, ANSI_BOLD_BRIGHT_WHITE, ANSI_WHITE,
     ANSI_RED, ANSI_GREEN, ANSI_CYAN, ANSI_PURPLE, ANSI_GREY
 )
