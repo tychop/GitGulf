@@ -42,7 +42,7 @@ pip install .
 gitgulf COMMAND
 
 or use one of the shortcuts:
-    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggd
+    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggd, ggm
 
 Commands:
     -s, --status       : Show all the repository statuses.
@@ -51,6 +51,7 @@ Commands:
     -pr, --prune       : Prunes objects that are no longer reachable.
     -c, --cleanup      : Clean up and optimize the local repositories.
     -b, --branch BRANCH: Switch all repositories to a specified branch.
+    -m, --main         : Switch all repositories to the main branch.
     -d, --development  : Switch all repositories to the development branch.
 
 Shortcuts:
@@ -61,6 +62,7 @@ Shortcuts:
     ggpr      : Prunes objects that are no longer reachable.
     ggc       : Clean up and optimize the local repositories.
     ggb BRANCH: Switch all repositories to a specified branch.
+    ggm       : Switch all repositories to the main branch.
     ggd       : Switch all repositories to the development branch.
 ```
 

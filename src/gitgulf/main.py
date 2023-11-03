@@ -12,7 +12,7 @@ def show_usage():
         `gitgulf COMMAND`
 
         or one of the shortcuts:
-            `gg COMMAND`, `ggs`, `ggf`, `ggp`, `ggpr`, `ggc`, `ggb BRANCH`, `ggd`
+            `gg COMMAND`, `ggs`, `ggf`, `ggp`, `ggpr`, `ggc`, `ggb BRANCH`, `ggm`, `ggd`
 
     Commands:
         -s, --status       : Show all the repository statuses.
@@ -21,6 +21,7 @@ def show_usage():
         -pr, --prune       : Prunes objects that are no longer reachable.
         -c, --cleanup      : Clean up and optimize the local repositories.
         -b, --branch BRANCH: Switch all repositories to a specified branch.
+        -m, --main         : Switch all repositories to the main branch.
         -d, --development  : Switch all repositories to the development branch.
 
     Shortcuts:
@@ -31,6 +32,7 @@ def show_usage():
         ggpr      : Prunes objects that are no longer reachable.
         ggc       : Clean up and optimize the local repositories.
         ggb BRANCH: Switch all repositories to a specified branch.
+        ggm       : Switch all repositories to the main branch.
         ggd       : Switch all repositories to the development branch.
     """)
 
@@ -52,24 +54,24 @@ def main():
     operation_description = ""  # Variable to hold the operation description
 
     if command in ['-s', '--status']:
-        operation_description = "status check"
-        print(f"\nGitGulf {operation_description}")
+        operation_description = "Status check"
+        print(f"\nGitGulf: {operation_description}")
         manager.status()
     elif command in ['-f', '--fetch']:
-        operation_description = "fetch operation"
-        print(f"\nGitGulf {operation_description}")
+        operation_description = "Fetch operation"
+        print(f"\nGitGulf: {operation_description}")
         manager.fetch()
     elif command in ['-p', '--pull']:
-        operation_description = "pull operation"
-        print(f"\nGitGulf {operation_description}")
+        operation_description = "Pull operation"
+        print(f"\nGitGulf: {operation_description}")
         manager.pull()
     elif command in ['-pr', '--prune']:
         operation_description = "prune operation"
-        print(f"\nGitGulf {operation_description}")
+        print(f"\nGitGulf: {operation_description}")
         manager.prune()
     elif command in ['-c', '--cleanup']:
-        operation_description = "cleanup operation"
-        print(f"\nGitGulf {operation_description}")
+        operation_description = "Cleanup operation"
+        print(f"\nGitGulf: {operation_description}")
         manager.cleanup()
     elif command in ['-b', '--branch']:
         # Ensure branch name is provided
@@ -77,12 +79,16 @@ def main():
             print("Error: BRANCH is required for -b/--branch")
             sys.exit(1)
         branch = sys.argv[2]
-        operation_description = f"switching to branch {branch}"
-        print(f"\nGitGulf {operation_description}")
+        operation_description = f"Switching to branch {branch}"
+        print(f"\nGitGulf: {operation_description}")
         manager.switch_branch(branch=branch)
+    elif command in ['-m', '--main']:
+        operation_description = "Switching to main branch"
+        print(f"\nGitGulf: {operation_description}")
+        manager.switch_branch(branch='development')
     elif command in ['-d', '--development']:
-        operation_description = "switching to development branch"
-        print(f"\nGitGulf {operation_description}")
+        operation_description = "Switching to development branch"
+        print(f"\nGitGulf: {operation_description}")
         manager.switch_branch(branch='development')
     else:
         show_usage()
@@ -92,7 +98,7 @@ def main():
     elapsed_time = time.time() - start_time
     # Display the elapsed time
     print(
-        f"{operation_description.capitalize()} took {elapsed_time:.2f} seconds to complete.")
+        f"{operation_description} took {elapsed_time:.2f} seconds to complete.")
 
 
 def main_s():
@@ -122,6 +128,12 @@ def main_c():
 
 def main_b():
     sys.argv.insert(1, '-b')
+    main()
+
+
+def main_m():
+    sys.argv.append('-m')
+    sys.argv.append('main')
     main()
 
 

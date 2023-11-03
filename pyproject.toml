@@ -24,6 +24,7 @@ ggp = "gitgulf.main:main_p"
 ggpr = "gitgulf.main:main_pr"
 ggc = "gitgulf.main:main_c"
 ggb = "gitgulf.main:main_b"
+ggm = "gitgulf.main:main_m"
 ggd = "gitgulf.main:main_d"
 
 [build-system]
