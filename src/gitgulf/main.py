@@ -1,17 +1,17 @@
 import sys
-from gitripple.repository_manager import GitRepoManager
+from gitgulf.repository_manager import GitRepoManager
 
 
 def show_usage():
     """
-    Prints the usage information for this script.
+    Prints the usage information.
     """
     print("""
     Usage:
-        `gitripple COMMAND`
+        `gitgulf COMMAND`
 
         or one of the shortcuts:
-            `gr COMMAND`, `grs`, `grf`, `grp`, `grpr`, `grc`, `grb BRANCH`, `grd`
+            `gg COMMAND`, `ggs`, `ggf`, `ggp`, `ggpr`, `ggc`, `ggb BRANCH`, `ggd`
 
     Commands:
         -s, --status       : Show all the repository statuses.
@@ -23,14 +23,14 @@ def show_usage():
         -d, --development  : Switch all repositories to the development branch.
 
     Shortcuts:
-        gr        : Same as gitripple.
-        grs       : Show all the repository statuses.
-        grf       : Fetch all repositories.
-        grp       : Pull all repositories.
-        grpr      : Prunes objects that are no longer reachable.
-        grc       : Clean up and optimize the local repositories.
-        grb BRANCH: Switch all repositories to a specified branch.
-        grd       : Switch all repositories to the development branch.
+        gg        : Same as gitgulf.
+        ggs       : Show all the repository statuses.
+        ggf       : Fetch all repositories.
+        ggp       : Pull all repositories.
+        ggpr      : Prunes objects that are no longer reachable.
+        ggc       : Clean up and optimize the local repositories.
+        ggb BRANCH: Switch all repositories to a specified branch.
+        ggd       : Switch all repositories to the development branch.
     """)
 
 

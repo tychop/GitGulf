@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "gitripple"
+name = "gitgulf"
 version = "0.1.0"
 description = "A CLI tool for managing multiple Git repositories collectively."
 authors = ["Tycho Pandelaar <tychop@me.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/tychop/gitripple"
+homepage = "https://github.com/tychop/gitgulf"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -16,15 +16,15 @@ classifiers = [
 python = "^3.6"
 
 [tool.poetry.scripts]
-gitripple = "gitripple.main:main"
-gr = "gitripple.main:main"
-grs = "gitripple.main:main_s"
-grf = "gitripple.main:main_f"
-grp = "gitripple.main:main_p"
-grpr = "gitripple.main:main_pr"
-grc = "gitripple.main:main_c"
-grb = "gitripple.main:main_b"
-grd = "gitripple.main:main_d"
+gitgulf = "gitgulf.main:main"
+gg = "gitgulf.main:main"
+ggs = "gitgulf.main:main_s"
+ggf = "gitgulf.main:main_f"
+ggp = "gitgulf.main:main_p"
+ggpr = "gitgulf.main:main_pr"
+ggc = "gitgulf.main:main_c"
+ggb = "gitgulf.main:main_b"
+ggd = "gitgulf.main:main_d"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
