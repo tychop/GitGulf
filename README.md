@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="img/gitgulf_640.png" alt="GitGulfLogo" width="512">
+  <img src="img/gitgulf_640.png" alt="GitGulfLogo" width="320">
 </p>
 
 ## Overview
