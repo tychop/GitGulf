@@ -17,7 +17,6 @@ python = "^3.6"
 
 [tool.poetry.scripts]
 gitgulf = "gitgulf.main:main"
-gg = "gitgulf.main:main"
 ggs = "gitgulf.main:main_s"
 ggf = "gitgulf.main:main_f"
 ggp = "gitgulf.main:main_p"

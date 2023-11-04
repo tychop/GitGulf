@@ -37,31 +37,30 @@ pip install .
 ### Usage
 
 ```
-gitgulf COMMAND
+  Usage:
+      `gitgulf COMMAND`,
+      or use one of the Abbreviated Commands described below.
 
-Commands:
-    -s, --status       : Show all the repository statuses.
-    -f, --fetch        : Fetch all repositories.
-    -p, --pull         : Pull all repositories.
-    -pr, --prune       : Prunes objects that are no longer reachable.
-    -c, --cleanup      : Clean up and optimize the local repositories.
-    -b, --branch BRANCH: Switch all repositories to a specified branch.
-    -m, --main         : Switch all repositories to the main branch.
-    -d, --development  : Switch all repositories to the development branch.
-
-or use one of the shortcuts:
-    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggm, ggd
-
-Shortcuts:
-    gg        : Same as 'gitgulf'.
-    ggs       : Show all the repository statuses.
-    ggf       : Fetch all repositories.
-    ggp       : Pull all repositories.
-    ggpr      : Prunes objects that are no longer reachable.
-    ggc       : Clean up and optimize the local repositories.
-    ggb BRANCH: Switch all repositories to a specified branch.
-    ggm       : Switch all repositories to the main branch.
-    ggd       : Switch all repositories to the development branch.
+  Commands:
+      -s,  --status        : Show all the repository statuses.
+      -f,  --fetch         : Fetch all repositories.
+      -p,  --pull          : Pull all repositories.
+      -b,  --branch BRANCH : Switch all repositories to the specified BRANCH.
+      -m,  --main          : Switch all repositories to the 'main' branch.
+      -d,  --development   : Switch all repositories to the 'development' branch.
+      -pr, --prune         : Prune objects that are no longer reachable from all local repositories.
+      -c,  --cleanup       : Clean up and optimize the local repositories.
+ 
+  Abbreviated Commands:
+    Instead of the full `gitgulf COMMAND` syntax, you can use abbreviated commands for quicker operations:
+      `ggs`        : Show all the repository statuses.
+      `ggf`        : Fetch all repositories.
+      `ggp`        : Pull all repositories.
+      `ggb BRANCH` : Switch all repositories to the specified BRANCH.
+      `ggm`        : Switch all repositories to the 'main' branch.
+      `ggd`        : Switch all repositories to the 'development' branch.
+      `ggpr`       : Prune objects that are no longer reachable from all local repositories.
+      `ggc`        : Clean up and optimize the local repositories.
 ```
 
 ### Contributing
