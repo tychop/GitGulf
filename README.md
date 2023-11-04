@@ -2,7 +2,7 @@
 
 Manage your ocean of Git repositories with ease.
 
-![Logo](img/gitgulf.png)
+![Logo](img/gitgulf.svg)
 
 ## Overview
 
