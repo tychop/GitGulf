@@ -1,4 +1,8 @@
-![Logo](img/gitgulf_320.png)
+<table align="center">
+  <tr>
+    <td align="center"><img src="img/gitgulf_320.png" alt="GitGulfLogo" width="230"></td>
+  </tr>
+</table>
 
 ## Overview
 
