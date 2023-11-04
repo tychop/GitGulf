@@ -1,6 +1,4 @@
-<div align="center">
 ![Logo](img/gitgulf_320.png)
-</div>
 
 ## Overview
 
