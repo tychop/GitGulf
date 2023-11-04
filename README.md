@@ -1,9 +1,3 @@
-<table align="center">
-  <tr>
-    <td align="center"><img src="img/gitgulf_640.png" alt="GitGulfLogo" width="512"></td>
-  </tr>
-</table>
-
 <p align="center">
   <img src="img/gitgulf_640.png" alt="GitGulfLogo" width="512">
 </p>
