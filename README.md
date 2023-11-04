@@ -39,9 +39,6 @@ pip install .
 ```
 gitgulf COMMAND
 
-or use one of the shortcuts:
-    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggd, ggm
-
 Commands:
     -s, --status       : Show all the repository statuses.
     -f, --fetch        : Fetch all repositories.
@@ -51,6 +48,9 @@ Commands:
     -b, --branch BRANCH: Switch all repositories to a specified branch.
     -m, --main         : Switch all repositories to the main branch.
     -d, --development  : Switch all repositories to the development branch.
+
+or use one of the shortcuts:
+    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggd, ggm
 
 Shortcuts:
     gg        : Same as 'gitgulf'.
