@@ -19,18 +19,18 @@ def show_usage():
       -b,  --branch BRANCH : Switch all repositories to the specified BRANCH.
       -m,  --main          : Switch all repositories to the 'main' branch.
       -d,  --development   : Switch all repositories to the 'development' branch.
-      -pr, --prune         : Prune objects that are no longer reachable from all local repositories.
+      -pr, --prune         : Prune objects that are no longer reachable from all repositories.
       -c,  --cleanup       : Clean up and optimize the local repositories.
  
   Abbreviated Commands:
-    Instead of the full `gitgulf COMMAND` syntax, you can use abbreviated commands for quicker operations:
+    Instead of the `gitgulf COMMAND` syntax, use abbreviated commands for quicker operations:
       `ggs`        : Show all the repository statuses.
       `ggf`        : Fetch all repositories.
       `ggp`        : Pull all repositories.
       `ggb BRANCH` : Switch all repositories to the specified BRANCH.
       `ggm`        : Switch all repositories to the 'main' branch.
       `ggd`        : Switch all repositories to the 'development' branch.
-      `ggpr`       : Prune objects that are no longer reachable from all local repositories.
+      `ggpr`       : Prune objects that are no longer reachable from all repositories.
       `ggc`        : Clean up and optimize the local repositories.
     """)
 
