@@ -1,6 +1,6 @@
 <table align="center">
   <tr>
-    <td align="center"><img src="img/gitgulf_320.png" alt="GitGulfLogo" width="640"></td>
+    <td align="center"><img src="img/gitgulf_640.png" alt="GitGulfLogo" width="640"></td>
   </tr>
 </table>
 
