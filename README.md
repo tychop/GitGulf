@@ -50,7 +50,7 @@ Commands:
     -d, --development  : Switch all repositories to the development branch.
 
 or use one of the shortcuts:
-    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggd, ggm
+    gg COMMAND, ggs, ggf, ggp, ggpr, ggc, ggb BRANCH, ggm, ggd
 
 Shortcuts:
     gg        : Same as 'gitgulf'.
