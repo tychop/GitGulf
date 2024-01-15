@@ -158,7 +158,7 @@ class GitRepoManager:
             return ANSI_RED
         elif int(repo.ahead) > 0:
             return ANSI_PURPLE
-        elif int(repo.staging) > 0:
+        elif int(repo.modifications) > 0:
             return ANSI_CYAN
         else:
             return ANSI_GREEN
@@ -207,7 +207,7 @@ class GitRepoManager:
         """
         table = Table()
         header_contents = ["Repository Name",
-                           "Branch", "Ahead", "Behind", "Staging"]
+                           "Branch", "Ahead", "Behind", "Modifications"]
         header_cells = [self._create_cell(
             content, color=ANSI_BOLD_BRIGHT_WHITE) for content in header_contents]
         table.add_header_row(header_cells)
@@ -222,7 +222,7 @@ class GitRepoManager:
                 self._create_cell(
                     repo.behind, justify="right", color=ANSI_RED),
                 self._create_cell(
-                    repo.staging, justify="right", color=ANSI_CYAN),
+                    repo.modifications, justify="right", color=ANSI_CYAN),
             ]
 
             table.add_row(row=row_cells, grey_out=not repo.completed)

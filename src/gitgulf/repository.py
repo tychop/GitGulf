@@ -18,7 +18,7 @@ class GitRepo:
         self.branch = ""
         self.ahead = 0
         self.behind = 0
-        self.staging = 0
+        self.modifications = 0
         self.completed = False
 
         # Populate the string variables
@@ -118,14 +118,14 @@ class GitRepo:
                 self.behind = 0
                 # Optionally: log the error if a logging system is utilized.
 
-            # Extract the number of changes in the staging environment.
+            # Extract the number of modifications.
             try:
-                self.staging = len(status_output.splitlines()) - 1
+                self.modifications = len(status_output.splitlines()) - 1
             except Exception:
-                self.staging = 0
+                self.modifications = 0
                 # Optionally: log the error if a logging system is utilized.
 
         except Exception:
             # General error handling for any other unexpected issue.
-            self.ahead, self.behind, self.staging = 0, 0, 0
+            self.ahead, self.behind, self.modifications = 0, 0, 0
             # Optionally: log the error if a logging system is utilized.
