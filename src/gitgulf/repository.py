@@ -118,11 +118,11 @@ class GitRepo:
                 self.behind = 0
                 # Optionally: log the error if a logging system is utilized.
 
-            # Extract the number of modifications.
+            # Extract the number of changes.
             try:
-                self.modifications = len(status_output.splitlines()) - 1
+                self.changes = len(status_output.splitlines()) - 1
             except Exception:
-                self.modifications = 0
+                self.changes = 0
                 # Optionally: log the error if a logging system is utilized.
 
         except Exception:
