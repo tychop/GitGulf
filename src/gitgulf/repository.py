@@ -18,7 +18,11 @@ class GitRepo:
         self.branch = ""
         self.ahead = 0
         self.behind = 0
+<<<<<<< HEAD
         self.changes = 0
+=======
+        self.modifications = 0
+>>>>>>> acf26013a8962572b1b1900339c9908ea7134174
         self.completed = False
 
         # Populate the string variables
@@ -127,5 +131,9 @@ class GitRepo:
 
         except Exception:
             # General error handling for any other unexpected issue.
+<<<<<<< HEAD
             self.ahead, self.behind, self.changes = 0, 0, 0
+=======
+            self.ahead, self.behind, self.modifications = 0, 0, 0
+>>>>>>> acf26013a8962572b1b1900339c9908ea7134174
             # Optionally: log the error if a logging system is utilized.
