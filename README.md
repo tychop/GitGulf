@@ -48,6 +48,8 @@ pip install .
 gitgulf COMMAND
 ```
 
+Use `gitgulf` without any arguments to see all the options.
+
 Choose from the following commands:
 
 ```
