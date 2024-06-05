@@ -9,7 +9,7 @@ GitGulf is a command-line tool designed to help you manage and navigate through 
 Gif showing ggs (status), ggf (fetch) & ggp (pull):
 <p align="left">
   <img src="img/gitgulf.gif" width="540">
-</p>p>
+</p>
 
 ## Features
 
