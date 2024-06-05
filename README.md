@@ -87,7 +87,3 @@ We welcome contributions to GitGulf! Please see our Contributing Guide for more 
 ### License
 
 GitGulf is MIT licensed.
-
-### Acknowledgements
-
-Extend your thanks or acknowledge people or organizations that helped you in working on this project.
