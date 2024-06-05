@@ -2,7 +2,7 @@
 name = "gitgulf"
 version = "0.1.0"
 description = "A CLI tool for managing multiple Git repositories collectively."
-authors = ["Tycho Pandelaar <tychop@me.com>"]
+authors = ["Tycho Pandelaar"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/tychop/gitgulf"
