@@ -7,28 +7,32 @@
 GitGulf is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a full collection of repositories, GitGulf aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
 Gif showing ggs, ggf & ggp:
+
 <p align="center">
-  <img src="img/GitGulf.gif" width="1080">
+  <img src="img/gitgulf.gif" width="540">
 </p>
 
 ## Features
 
-- **Status**: View the current status of all repositories in a directory.
-- **Fetch**: Perform a `git fetch` on all repositories.
-- **Pull**: Perform a `git pull` on all repositories.
-- **Switch Branch**: Swiftly switch between branches on all repositories.
-- **Prune**: Prune all reachable objects from the object databases.
-- **Cleanup**: Clean up and optimize your local repositories.
+-   **Status**: View the current status of all repositories in a directory.
+-   **Fetch**: Perform a `git fetch` on all repositories.
+-   **Pull**: Perform a `git pull` on all repositories.
+-   **Switch Branch**: Swiftly switch between branches on all repositories.
+-   **Prune**: Prune all reachable objects from the object databases.
+-   **Cleanup**: Clean up and optimize your local repositories.
 
 ## Installation
 
 ### Install using pip
+
 ```shell
 pip install gitgulf
 ```
 
 ### Install from this repo
+
 Clone the gitgulf repository and run pip install on it:.
+
 ```shell
 git clone https://github.com/tychop/gitgulf.git
 cd gitgulf
@@ -37,7 +41,7 @@ pip install .
 
 ### Requirements
 
-- A modern Python version (3.6+)
+-   A modern Python version (3.6+)
 
 ### **Usage:**
 
@@ -59,6 +63,7 @@ Choose from the following commands:
 ```
 
 ### Abbreviated Commands:
+
 Instead of the `gitgulf COMMAND` syntax, use abbreviated commands for quicker operations:
 
 ```
