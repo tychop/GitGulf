@@ -78,10 +78,6 @@ Instead of the `gitgulf COMMAND` syntax, use abbreviated commands for quicker op
 `ggc`        : Clean up and optimize the local repositories.
 ```
 
-### Contributing
-
-We welcome contributions to GitGulf! Please see our Contributing Guide for more details.
-
 ### License
 
 GitGulf is MIT licensed.
