@@ -6,7 +6,7 @@
 
 GitGulf is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a full collection of repositories, GitGulf aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
-Gif showing ggs, ggf & ggp:
+Gif showing ggs (status), ggf (fetch) & ggp (pull):
 <p align="left">
   <img src="img/gitgulf.gif" width="540">
 </p>p>
