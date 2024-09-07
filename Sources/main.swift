@@ -43,9 +43,7 @@ func run() async {
         case "development":
             await app.checkout(branch: "development")
         case "master":
-            await app.checkout(branch: "main")
-        case "main":
-            await app.checkout(branch: "main")
+            await app.checkout(branch: "master")
         default:
             print("Invalid argument: \(argument). Usage: gitgulf [status|fetch|pull|development|master|main|-b branch|--version]")
         }
