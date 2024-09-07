@@ -3,7 +3,7 @@
 //
 //
 //  Created by Tycho Pandelaar on 06/09/2024.
-//  Copyright © 2024 KLM. All rights reserved.
+//  Copyright © 2024 Tycho Pandelaar. All rights reserved.
 //
 
 import Foundation
