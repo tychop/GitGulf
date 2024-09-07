@@ -17,30 +17,30 @@ Gif showing ggs (status), ggf (fetch) & ggp (pull):
 -   **Fetch**: Perform a `git fetch` on all repositories.
 -   **Pull**: Perform a `git pull` on all repositories.
 -   **Switch Branch**: Swiftly switch between branches on all repositories.
--   **Prune**: Prune all reachable objects from the object databases.
--   **Cleanup**: Clean up and optimize your local repositories.
 
 ## Installation
 
-### Install using pip
+### Install using hoembrew
 
 ```shell
-pip install gitgulf
+brew tap tychop/homebrew-gitgulf
+brew install gitgulf
 ```
 
 ### Install from this repo
 
-Clone the gitgulf repository and run pip install on it:.
+Clone the gitgulf repository and run `swift build -c release`:
 
 ```shell
 git clone https://github.com/tychop/gitgulf.git
 cd gitgulf
-pip install .
+swift build -c release
 ```
+The binary will be located at: `gitgulf/.build/release/gitgulf`
 
 ### Requirements
 
--   A modern Python version (3.6+)
+- Homebrew
 
 ### **Usage:**
 
@@ -53,14 +53,12 @@ Use `gitgulf` without any arguments to see all the options.
 Choose from the following commands:
 
 ```
-`-s, --status`        : Show all repository statuses.
-`-f, --fetch`         : Fetch all repositories.
-`-p, --pull`          : Pull all repositories.
-`-b, --branch` BRANCH : Switch all repositories to the specified BRANCH.
-`-m, --main`          : Switch all repositories to the 'main' branch.
-`-d, --development`   : Switch all repositories to the 'development' branch.
-`-pr, --prune`        : Prune objects no longer reachable from all repositories.
-`-c, --cleanup`       : Clean up and optimize local repositories.
+`status`        : Show all repository statuses.
+`fetch`         : Fetch all repositories.
+`pull`          : Pull all repositories.
+`master`        : Switch all repositories to the 'main' branch.
+`development`   : Switch all repositories to the 'development' branch.
+`-b <branch>    : Switch all repositories to the specified branch.
 ```
 
 ### Abbreviated Commands:
@@ -71,11 +69,9 @@ Instead of the `gitgulf COMMAND` syntax, use abbreviated commands for quicker op
 `ggs`        : Show all the repository statuses.
 `ggf`        : Fetch all repositories.
 `ggp`        : Pull all repositories.
-`ggb BRANCH` : Switch all repositories to the specified BRANCH.
-`ggm`        : Switch all repositories to the 'main' branch.
+`ggm`        : Switch all repositories to the 'master' branch.
 `ggd`        : Switch all repositories to the 'development' branch.
-`ggpr`       : Prune objects that are no longer reachable from all repositories.
-`ggc`        : Clean up and optimize the local repositories.
+`ggb BRANCH` : Switch all repositories to the specified BRANCH.
 ```
 
 ### License
