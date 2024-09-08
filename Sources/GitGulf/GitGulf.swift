@@ -3,7 +3,7 @@
 //
 //
 //  Created by Tycho Pandelaar on 07/09/2024.
-//  Copyright © 2024 Tycho Pandelaar. All rights reserved.
+//  Copyright © 2024 KLM. All rights reserved.
 //
 
 import Foundation
@@ -21,9 +21,6 @@ class GitGulf {
 	private let composer = UIComposer()
 	private let repositoryManager = RepositoryManager()
 
-	// A serial queue to ensure that updateUI is only called one at a time
-	private let uiUpdateQueue = DispatchQueue(label: "com.gitgulf.uiUpdateQueue")
-
 	func run(gitCommand: GitCommand) async {
 		await repositoryManager.loadRepositories()
 		let repositories = repositoryManager.repositories
@@ -34,7 +31,7 @@ class GitGulf {
 					do {
 						switch gitCommand {
 						case .status:
-							try await repository.status()
+							()
 						case .fetch:
 							try await repository.fetch()
 						case .pull:
@@ -44,8 +41,10 @@ class GitGulf {
 						}
 					} catch {
 						print("Failed to complete \(gitCommand) for \(repository.name): \(error)")
+						exit(1)
 					}
 					await MainActor.run {
+						repository.colored = true
 						self.updateUI()
 					}
 				}
@@ -55,15 +54,11 @@ class GitGulf {
 		await MainActor.run {
 			self.updateUI(finalFrame: true)
 		}
-		print("\u{001B}[0m")
-	}
-
-	func moveCursorUp(nrOfLines: Int) {
-		print("\u{1B}[\(nrOfLines)A", terminator: "")
+		resetTerminalTextFormatting()
 	}
 
 	func updateUI(initialFrame: Bool = false, finalFrame: Bool = false) {
-		let frame = composer.generateUIString(repositories: repositoryManager.repositories, initialFrame: initialFrame)
+		let frame = composer.render(repositories: repositoryManager.repositories, initialFrame: initialFrame)
 		print(frame)
 
 		if finalFrame == false {
@@ -93,5 +88,13 @@ class GitGulf {
 		print("GitGulf: Switching to branch \(branch)\n")
 		await run(gitCommand: .checkout(branch))
 		print("Switching to branch \(branch) took \(Date().timeIntervalSince(startTime)) seconds to complete")
+	}
+
+	func moveCursorUp(nrOfLines: Int) {
+		print("\u{1B}[\(nrOfLines)A", terminator: "")
+	}
+
+	func resetTerminalTextFormatting() {
+		print("\u{001B}[0m")
 	}
 }

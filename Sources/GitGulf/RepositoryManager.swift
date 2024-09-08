@@ -10,32 +10,34 @@ import Foundation
 
 class RepositoryManager {
 	var repositories: [Repository] = []
-	private let repositoriesQueue = DispatchQueue(label: "com.gitgulf.repositoriesQueue", attributes: .concurrent)
-
-	init() {}
 
 	func loadRepositories() async {
 		do {
 			let fileManager = FileManager.default
 			let currentPath = fileManager.currentDirectoryPath
 			let directories = try fileManager.contentsOfDirectory(atPath: currentPath)
+			let currentPathURL = URL(fileURLWithPath: currentPath)
 
 			await withTaskGroup(of: Void.self) { group in
 				for directory in directories {
-					// Avoid capturing FileManager directly
+					let directoryURL = currentPathURL.appendingPathComponent(directory)
+
 					var isDirectory: ObjCBool = false
-					let path = currentPath + "/" + directory
-					let isGitDirectory = fileManager.fileExists(atPath: path, isDirectory: &isDirectory) && isDirectory.boolValue && fileManager.fileExists(atPath: "\(path)/.git")
+					let isGitDirectory = fileManager.fileExists(atPath: directoryURL.path, isDirectory: &isDirectory) && isDirectory.boolValue && fileManager.fileExists(atPath: directoryURL.appendingPathComponent(".git").path)
 
 					group.addTask {
 						if isGitDirectory {
-							let repository = Repository(name: directory, path: path)
+							let repository = Repository(name: directory, path: directoryURL.path)
 
-							// Add to repositories in a thread-safe manner using DispatchWorkItem with barrier.
-							let workItem = DispatchWorkItem(flags: .barrier) {
-								self.repositories.append(repository)
+							do {
+								try await repository.status()
+							} catch {
+								print("Failed to get git status \(repository.name): \(error)")
+								exit(1)
 							}
-							self.repositoriesQueue.async(execute: workItem)
+
+							repository.colored = false
+							self.repositories.append(repository)
 						}
 					}
 				}

@@ -15,7 +15,7 @@ class Repository {
 	var ahead: String
 	var behind: String
 	var changes: String
-	var completed = false
+	var colored = false
 
 	init(
 		name: String,
@@ -50,7 +50,7 @@ class Repository {
 			changes = "\(nrOfChanges)"
 		}
 
-		completed = true
+		colored = true
 	}
 
 	func checkout(branch: String) async throws {

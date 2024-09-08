@@ -9,24 +9,21 @@
 import Foundation
 
 class UIComposer {
+	private let spacer = "…"
+	private let emptyString = ""
 	private let colors = (
 		brightGreen: "\u{001B}[92m",
 		brightWhite: "\u{001B}[97m",
-		cyan: "\u{001B}[36m",
-		grey: "\u{001B}[90m",
-		purple: "\u{001B}[35m",
-		red: "\u{001B}[31m",
-		reset: "\u{001B}[90m"
+		cyan:        "\u{001B}[36m",
+		grey:        "\u{001B}[90m",
+		purple:      "\u{001B}[35m",
+		red:         "\u{001B}[31m",
+		reset:       "\u{001B}[90m"
 	)
 
-	private let spacer = "…"
-	private let emptyString = ""
-
-	func generateUIString(repositories: [Repository], initialFrame: Bool = false) -> String {
+	func render(repositories: [Repository], initialFrame: Bool = false) -> String {
 		let sortedRepositories = repositories.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-
 		let titles = (repo: "Repository Name", branch: "Branch", ahead: "Ahead", behind: "Behind", changes: "Changes")
-
 		let maxLengths = (
 			name: max(repositories.map { $0.name.count }.max() ?? 0, titles.repo.count),
 			branch: max(repositories.map { $0.branch.count }.max() ?? 0, titles.branch.count),
@@ -37,7 +34,7 @@ class UIComposer {
 
 		var resultString = ""
 
-		// Add the header
+		// Render the header
 		resultString.append(
 			"\(colors.brightWhite)\(titles.repo.padding(toLength: maxLengths.name, withPad: " ", startingAt: 0)) │ \(colors.reset)" +
 			"\(colors.brightWhite)\(titles.branch.padding(toLength: maxLengths.branch, withPad: " ", startingAt: 0)) │ \(colors.reset)" +
@@ -46,7 +43,7 @@ class UIComposer {
 			"\(colors.brightWhite)\(titles.changes.padding(toLength: maxLengths.changes, withPad: " ", startingAt: 0))\(colors.reset)\n"
 		)
 
-		// Add the divider
+		// Render the divider
 		resultString.append(
 			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.name, withPad: "═", startingAt: 0))═╪═\(colors.reset)" +
 			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.branch, withPad: "═", startingAt: 0))═╪═\(colors.reset)" +
@@ -55,7 +52,7 @@ class UIComposer {
 			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.changes, withPad: "═", startingAt: 0))\(colors.reset)\n"
 		)
 
-		// Add the data
+		// Render the repo specific data
 		for repo in sortedRepositories {
 			var aheadColor = colors.purple, behindColor = colors.red, changesColor = colors.cyan
 			var branchColor = repo.ahead != "0" ? colors.purple :
@@ -63,7 +60,7 @@ class UIComposer {
 				(repo.changes != "0" ? colors.cyan :
 					colors.brightGreen))
 
-			if repo.completed == false {
+			if repo.colored == false {
 				branchColor = colors.grey
 				aheadColor = colors.grey
 				behindColor = colors.grey
@@ -113,15 +110,12 @@ class UIComposer {
 
 extension String {
 	func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
-		// Ensure the target string is not empty
 		guard !target.isEmpty else { return self }
 
-		// Find the range of the first occurrence of the target string
 		if let range = self.range(of: target), range.lowerBound != self.startIndex {
-			// Replace the target string with the replacement string
 			return self.replacingCharacters(in: range, with: replacement)
 		}
-		// If the target string is not found or it is at the beginning, return the original string
+
 		return self
 	}
 }
