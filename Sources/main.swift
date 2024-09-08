@@ -9,22 +9,19 @@
 import Foundation
 
 func run() async {
-	// Get command line arguments
 	let arguments = CommandLine.arguments
-	
-	// Ensure there's at least one argument beyond the command itself
+	let usageString = "Usage: gitgulf [ status | fetch | pull| development| master| main| -b branch | --version ]"
+
 	guard arguments.count > 1 else {
-		print("No arguments provided. Usage: gitgulf [status|fetch|pull|development|master|main|-b branch|--version]")
+		print("No arguments provided. \(usageString)")
 		return
 	}
 	
-	// Get the first argument (following the command itself)
 	let argument = arguments[1]
 	let gitgulf = GitGulf()
 	
 	if argument == "--version" {
-		// Print the version number
-		print("GitGulf version 0.1.0")
+		print("GitGulf version 0.1.1")
 		print("https://github.com/tychop/GitGulf")
 	} else if argument == "-b" {
 		guard arguments.count > 2 else {
@@ -46,7 +43,7 @@ func run() async {
 		case "master":
 			await gitgulf.checkout(branch: "master")
 		default:
-			print("Invalid argument: \(argument). Usage: gitgulf [status|fetch|pull|development|master|main|-b branch|--version]")
+			print("Invalid argument: \(argument). \(usageString)")
 		}
 		print("")
 	}
