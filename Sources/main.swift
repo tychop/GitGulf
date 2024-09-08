@@ -21,7 +21,7 @@ func run() async {
 	let gitgulf = GitGulf()
 	
 	if argument == "--version" {
-		print("GitGulf version 0.1.1")
+		print("GitGulf v0.1.2")
 		print("https://github.com/tychop/GitGulf")
 	} else if argument == "-b" {
 		guard arguments.count > 2 else {
