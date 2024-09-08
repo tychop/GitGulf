@@ -10,7 +10,7 @@ import Foundation
 
 func run() async {
 	let arguments = CommandLine.arguments
-	let usageString = "Usage: gitgulf [ status | fetch | pull| development| master| main| -b branch | --version ]"
+	let usageString = "Usage: gitgulf [ status | fetch | pull | development | master | main | -b branch | --version ]"
 
 	guard arguments.count > 1 else {
 		print("No arguments provided. \(usageString)")
