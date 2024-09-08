@@ -48,6 +48,7 @@ func run() async {
 		default:
 			print("Invalid argument: \(argument). Usage: gitgulf [status|fetch|pull|development|master|main|-b branch|--version]")
 		}
+		print("")
 	}
 }
 

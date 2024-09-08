@@ -18,7 +18,7 @@ class GitGulf {
 		case checkout(String)
 	}
 
-	private let composer = UIComposer()
+	private let composer = UIRenderer()
 	private let repositoryManager = RepositoryManager()
 
 	func run(gitCommand: GitCommand) async {
