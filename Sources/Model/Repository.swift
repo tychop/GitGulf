@@ -8,14 +8,14 @@
 
 import Foundation
 
-class Repository {
+class Repository: Hashable {
 	let name: String
 	let path: String
 	var branch: String
 	var ahead: String
 	var behind: String
 	var changes: String
-	var colored = false
+	var colorState = false
 
 	init(
 		name: String,
@@ -34,6 +34,8 @@ class Repository {
 	}
 
 	func status() async throws {
+		reset()
+		
 		branch = try await Shell.execute("git", "-C", path, "rev-parse", "--abbrev-ref", "HEAD").output
 
 		let statusOutput = try await Shell.execute("git", "-C", path, "status", "--porcelain", "--branch").output
@@ -50,21 +52,41 @@ class Repository {
 			changes = "\(nrOfChanges)"
 		}
 
-		colored = true
+		colorState = true
 	}
 
 	func checkout(branch: String) async throws {
 		try await Shell.execute("git", "-C", path, "checkout", branch)
-		try await status()
+		try await finish()
 	}
 
 	func fetch() async throws {
 		try await Shell.execute("git", "-C", path, "fetch")
-		try await status()
+		try await finish()
 	}
 
 	func pull() async throws {
 		try await Shell.execute("git", "-C", path, "pull")
+		try await finish()
+	}
+
+	func reset() {
+		ahead = "0"
+		behind = "0"
+		changes = "0"
+	}
+
+	func finish() async throws {
 		try await status()
+	}
+
+	// MARK: - Hashable Conformance
+
+	static func == (lhs: Repository, rhs: Repository) -> Bool {
+		return lhs.name == rhs.name
+	}
+
+	func hash(into hasher: inout Hasher) {
+		hasher.combine(name)
 	}
 }

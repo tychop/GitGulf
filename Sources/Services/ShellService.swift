@@ -12,7 +12,6 @@ enum ShellError: Error {
 	case executionFailed(String)
 }
 
-// Shell utility to execute commands and capture their output
 struct Shell {
 	@discardableResult
 	static func execute(_ args: String...) async throws -> (output: String, status: Int32) {
@@ -25,14 +24,13 @@ struct Shell {
 			process.standardOutput = pipe
 			process.standardError = pipe
 
-			process.terminationHandler = { _ in
+			process.terminationHandler = { process in
 				let data = pipe.fileHandleForReading.readDataToEndOfFile()
-				guard let output = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+				guard let output = String(data: data, encoding: .utf8) else {
 					continuation.resume(throwing: ShellError.executionFailed("Failed to interpret process output"))
 					return
 				}
-
-				continuation.resume(returning: (output, process.terminationStatus))
+				continuation.resume(returning: (output.trimmingCharacters(in: .whitespacesAndNewlines), process.terminationStatus))
 			}
 
 			do {

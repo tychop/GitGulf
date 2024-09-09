@@ -8,16 +8,15 @@
 
 import Foundation
 
+enum GitCommand {
+	case status
+	case fetch
+	case pull
+	case checkout(String)
+}
+
 class GitGulf {
 	private let startTime = Date()
-
-	enum GitCommand {
-		case status
-		case fetch
-		case pull
-		case checkout(String)
-	}
-
 	private let composer = UIRenderer()
 	private let repositoryManager = RepositoryManager()
 
@@ -31,7 +30,7 @@ class GitGulf {
 					do {
 						switch gitCommand {
 						case .status:
-							()
+							try await repository.status()
 						case .fetch:
 							try await repository.fetch()
 						case .pull:
@@ -43,8 +42,9 @@ class GitGulf {
 						print("Failed to complete \(gitCommand) for \(repository.name): \(error)")
 						exit(1)
 					}
+
 					await MainActor.run {
-						repository.colored = true
+						repository.colorState = true
 						self.updateUI()
 					}
 				}
@@ -54,12 +54,13 @@ class GitGulf {
 		await MainActor.run {
 			self.updateUI(finalFrame: true)
 		}
+
+		resetTerminalTextFormatting()
 	}
 
 	func updateUI(finalFrame: Bool = false) {
-		let frame = composer.render(repositories: repositoryManager.repositories)
+		let frame = composer.render(repositories: Array(repositoryManager.repositories))
 		print(frame)
-
 		if finalFrame == false {
 			moveCursorUp(nrOfLines: frame.split(separator: "\n").count + 1)
 		}
@@ -91,5 +92,25 @@ class GitGulf {
 
 	func moveCursorUp(nrOfLines: Int) {
 		print("\u{1B}[\(nrOfLines)A", terminator: "")
+	}
+
+	func debugState() {
+		let sortedRepositories = repositoryManager
+			.repositories
+			.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+
+		sortedRepositories.forEach { repository in
+			print(
+				repository.name,
+				repository.branch,
+				repository.ahead,
+				repository.behind,
+				repository.changes
+			)
+		}
+	}
+
+	func resetTerminalTextFormatting() {
+		print("\u{001B}[0m")
 	}
 }
