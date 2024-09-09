@@ -54,7 +54,6 @@ class GitGulf {
 		await MainActor.run {
 			self.updateUI(finalFrame: true)
 		}
-		resetTerminalTextFormatting()
 	}
 
 	func updateUI(finalFrame: Bool = false) {
@@ -92,9 +91,5 @@ class GitGulf {
 
 	func moveCursorUp(nrOfLines: Int) {
 		print("\u{1B}[\(nrOfLines)A", terminator: "")
-	}
-
-	func resetTerminalTextFormatting() {
-		print("\u{001B}[0m")
 	}
 }
