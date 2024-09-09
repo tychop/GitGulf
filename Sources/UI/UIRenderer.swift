@@ -24,7 +24,7 @@ class UIRenderer {
 		brightWhite: "\u{001B}[97m"
 	)
 	
-	func render(repositories: [Repository], initialFrame: Bool = false) -> String {
+	func render(repositories: [Repository]) -> String {
 		let sortedRepositories = repositories.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
 		let maxLengths: MaxLengths = (
@@ -75,7 +75,7 @@ class UIRenderer {
 				 : (repo.changes != "0" ? colors.cyan
 						: colors.brightGreen))
 
-		if repo.colored == false {
+		if repo.colorState == false {
 			branchColor = colors.grey
 		}
 
@@ -107,7 +107,7 @@ class UIRenderer {
 			var behindColor = colors.red
 			var changesColor = colors.cyan
 
-			if repository.colored == false {
+			if repository.colorState == false {
 				aheadColor = colors.grey
 				behindColor = colors.grey
 				changesColor = colors.grey
