@@ -18,6 +18,8 @@ class RepositoryManager {
 			let directories = try fileManager.contentsOfDirectory(atPath: currentPath)
 			let currentPathURL = URL(fileURLWithPath: currentPath)
 
+			repositories = []
+
 			await withTaskGroup(of: Void.self) { group in
 				for directory in directories {
 					let directoryURL = currentPathURL.appendingPathComponent(directory)

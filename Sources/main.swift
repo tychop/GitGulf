@@ -8,6 +8,10 @@
 
 import Foundation
 
+func resetTerminalTextFormatting() {
+	print("\u{001B}[0m")
+}
+
 func run() async {
 	let arguments = CommandLine.arguments
 	let usageString = "Usage: gitgulf [ status | fetch | pull | development | master | main | -b branch | --version ]"
@@ -51,3 +55,6 @@ func run() async {
 
 print("")
 await run()
+
+resetTerminalTextFormatting()
+

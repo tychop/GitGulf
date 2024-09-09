@@ -57,8 +57,8 @@ class GitGulf {
 		resetTerminalTextFormatting()
 	}
 
-	func updateUI(initialFrame: Bool = false, finalFrame: Bool = false) {
-		let frame = composer.render(repositories: repositoryManager.repositories, initialFrame: initialFrame)
+	func updateUI(finalFrame: Bool = false) {
+		let frame = composer.render(repositories: repositoryManager.repositories)
 		print(frame)
 
 		if finalFrame == false {

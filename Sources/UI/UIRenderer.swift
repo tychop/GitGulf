@@ -24,7 +24,7 @@ class UIRenderer {
 		brightWhite: "\u{001B}[97m"
 	)
 	
-	func render(repositories: [Repository], initialFrame: Bool = false) -> String {
+	func render(repositories: [Repository]) -> String {
 		let sortedRepositories = repositories.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
 		let maxLengths: MaxLengths = (
