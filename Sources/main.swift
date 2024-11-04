@@ -10,7 +10,7 @@ import Foundation
 
 func run() async {
 	let arguments = CommandLine.arguments
-	let usageString = "Usage: gitgulf [ status | fetch | pull | development | master | main | -b branch | --version ]"
+	let usageString = "Usage: gitgulf [ status | fetch | pull | development | master | -b branch | --version ]"
 
 	guard arguments.count > 1 else {
 		print("No arguments provided. \(usageString)")
@@ -21,7 +21,7 @@ func run() async {
 	let gitgulf = GitGulf()
 	
 	if argument == "--version" {
-		print("GitGulf v0.1.3")
+		print("GitGulf v0.1.4")
 		print("https://github.com/tychop/GitGulf")
 	} else if argument == "-b" {
 		guard arguments.count > 2 else {
