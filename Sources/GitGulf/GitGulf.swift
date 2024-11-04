@@ -18,11 +18,11 @@ enum GitCommand {
 class GitGulf {
 	private let startTime = Date()
 	private let composer = UIRenderer()
-	private let repositoryManager = RepositoryManager()
+	@MainActor private lazy var repositoryManager = RepositoryManager()
 
 	func run(gitCommand: GitCommand) async {
 		await repositoryManager.loadRepositories()
-		let repositories = repositoryManager.repositories
+		let repositories = await repositoryManager.repositories
 
 		await withTaskGroup(of: Void.self) { group in
 			for repository in repositories {
@@ -58,7 +58,7 @@ class GitGulf {
 		resetTerminalTextFormatting()
 	}
 
-	func updateUI(finalFrame: Bool = false) {
+	@MainActor func updateUI(finalFrame: Bool = false) {
 		let frame = composer.render(repositories: Array(repositoryManager.repositories))
 		print(frame)
 		if finalFrame == false {
@@ -94,7 +94,7 @@ class GitGulf {
 		print("\u{1B}[\(nrOfLines)A", terminator: "")
 	}
 
-	func debugState() {
+	@MainActor func debugState() {
 		let sortedRepositories = repositoryManager
 			.repositories
 			.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
