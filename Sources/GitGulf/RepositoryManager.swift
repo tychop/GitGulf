@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 class RepositoryManager {
 	var repositories: Set<Repository> = []
 
@@ -47,6 +48,7 @@ class RepositoryManager {
 				exit(1)
 			}
 			repository.colorState = false
+
 			self.repositories.insert(repository)
 		}
 	}
