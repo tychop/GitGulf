@@ -19,6 +19,37 @@ class GitGulf {
 	private let startTime = Date()
 	private let composer = UIRenderer()
 	@MainActor private lazy var repositoryManager = RepositoryManager()
+	
+	/// Returns the elapsed time since start with two decimal places
+	private var formattedElapsedTime: String {
+		String(format: "%.2f", Date().timeIntervalSince(startTime))
+	}
+
+	/// Terminal width determined lazily by running 'tput cols'
+	private lazy var terminalWidth: Int = {
+		let process = Process()
+		process.executableURL = URL(fileURLWithPath: "/usr/bin/tput")
+		process.arguments = ["cols"]
+
+		let pipe = Pipe()
+		process.standardOutput = pipe
+
+		do {
+			try process.run()
+			process.waitUntilExit()
+
+			let data = pipe.fileHandleForReading.readDataToEndOfFile()
+			if let output = String(data: data, encoding: .utf8),
+				 let width = Int(output.trimmingCharacters(in: .whitespacesAndNewlines)),
+				 width > 0 {
+				return width
+			}
+		} catch {
+			// Keep default width if tput fails
+		}
+
+		return 80 // Default width if tput fails
+	}()
 
 	func run(gitCommand: GitCommand) async {
 		await repositoryManager.loadRepositories()
@@ -59,7 +90,7 @@ class GitGulf {
 	}
 
 	@MainActor func updateUI(finalFrame: Bool = false) {
-		let frame = composer.render(repositories: Array(repositoryManager.repositories))
+		let frame = composer.render(repositories: Array(repositoryManager.repositories), terminalWidth: terminalWidth)
 		print(frame)
 		if finalFrame == false {
 			moveCursorUp(nrOfLines: frame.split(separator: "\n").count + 1)
@@ -69,25 +100,25 @@ class GitGulf {
 	func status() async {
 		print("GitGulf: Status check\n")
 		await run(gitCommand: .status)
-		print("Status check took \(Date().timeIntervalSince(startTime)) seconds to complete")
+		print("Status check took \(formattedElapsedTime) seconds to complete")
 	}
 
 	func fetch() async {
 		print("GitGulf: Fetch operation\n")
 		await run(gitCommand: .fetch)
-		print("Fetch operation took \(Date().timeIntervalSince(startTime)) seconds to complete")
+		print("Fetch operation took \(formattedElapsedTime) seconds to complete")
 	}
 
 	func pull() async {
 		print("GitGulf: Pull operation\n")
 		await run(gitCommand: .pull)
-		print("Pull operation took \(Date().timeIntervalSince(startTime)) seconds to complete")
+		print("Pull operation took \(formattedElapsedTime) seconds to complete")
 	}
 
 	func checkout(branch: String) async {
 		print("GitGulf: Switching to branch \(branch)\n")
 		await run(gitCommand: .checkout(branch))
-		print("Switching to branch \(branch) took \(Date().timeIntervalSince(startTime)) seconds to complete")
+		print("Switching to branch \(branch) took \(formattedElapsedTime) seconds to complete")
 	}
 
 	func moveCursorUp(nrOfLines: Int) {

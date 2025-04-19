@@ -12,8 +12,10 @@ class UIRenderer {
 	typealias Titles = (repo: String, branch: String, ahead: String, behind: String, changes: String)
 	typealias MaxLengths = (name: Int, branch: Int, ahead: Int, behind: Int, changes: Int)
 
+	/// Terminal width with default value
 	private let spacer = "…"
 	private let emptyString = ""
+	private let backgroundCharacter = " "
 	private let titles: Titles = (repo: "Repository Name", branch: "Branch", ahead: "Ahead", behind: "Behind", changes: "Changes")
 	private let colors = (
 		red:         "\u{001B}[31m",
@@ -23,8 +25,72 @@ class UIRenderer {
 		brightGreen: "\u{001B}[92m",
 		brightWhite: "\u{001B}[97m"
 	)
+
+	/// Calculate max lengths considering terminal width constraints
+	private func calculateMaxLengths(repositories: [Repository], availableWidth: Int) -> MaxLengths {
+		// Base lengths - minimum required for each column
+		let baseLengths: MaxLengths = (
+			name: max(repositories.map { $0.name.count }.max() ?? 0, titles.repo.count),
+			branch: max(repositories.map { $0.branch.count }.max() ?? 0, titles.branch.count),
+			ahead: max(repositories.map { $0.ahead.count }.max() ?? 0, titles.ahead.count),
+			behind: max(repositories.map { $0.behind.count }.max() ?? 0, titles.behind.count),
+			changes: max(repositories.map { $0.changes.count }.max() ?? 0, titles.changes.count)
+		)
+		
+		// Calculate total width including separators (4 × "│ " = 8 chars)
+		let separatorsWidth = 8
+		let totalBaseWidth = baseLengths.name + baseLengths.branch + baseLengths.ahead + baseLengths.behind + baseLengths.changes + separatorsWidth
+		
+		// If we have enough space for all columns at full width, return base lengths
+		if totalBaseWidth <= availableWidth {
+			return baseLengths
+		}
+		
+		// Otherwise, we need to adjust column widths
+		// Priority: name (most important) > branch > changes > ahead > behind (least important)
+		
+		// Start with minimum widths for each column
+		let minLengths: MaxLengths = (
+			name: min(15, baseLengths.name),         // Repo name is important
+			branch: min(10, baseLengths.branch),     // Branch name should be recognizable
+			ahead: min(5, baseLengths.ahead),        // Numbers are often small
+			behind: min(5, baseLengths.behind),      // Numbers are often small
+			changes: min(5, baseLengths.changes)     // Numbers are often small
+		)
+		
+		// Calculate total minimum width
+		let totalMinWidth = minLengths.name + minLengths.branch + minLengths.ahead + minLengths.behind + minLengths.changes + separatorsWidth
+		
+		// If minimum width is still too large, just return minimum widths
+		if totalMinWidth >= availableWidth {
+			return minLengths
+		}
+		
+		// We have some space to distribute among columns
+		let extraSpace = availableWidth - totalMinWidth
+		
+		// Define priority weights for distributing extra space (total = 10)
+		let weights = (name: 4, branch: 3, ahead: 1, behind: 1, changes: 1)
+		let totalWeight = weights.name + weights.branch + weights.ahead + weights.behind + weights.changes
+		
+		// Distribute extra space proportionally
+		let nameExtra = (extraSpace * weights.name) / totalWeight
+		let branchExtra = (extraSpace * weights.branch) / totalWeight
+		let aheadExtra = (extraSpace * weights.ahead) / totalWeight
+		let behindExtra = (extraSpace * weights.behind) / totalWeight
+		let changesExtra = extraSpace - nameExtra - branchExtra - aheadExtra - behindExtra // Ensure we use exactly all extra space
+		
+		return (
+			name: min(baseLengths.name, minLengths.name + nameExtra),
+			branch: min(baseLengths.branch, minLengths.branch + branchExtra),
+			ahead: min(baseLengths.ahead, minLengths.ahead + aheadExtra),
+			behind: min(baseLengths.behind, minLengths.behind + behindExtra),
+			changes: min(baseLengths.changes, minLengths.changes + changesExtra)
+		)
+	}
 	
-	func render(repositories: [Repository]) -> String {
+	/// Legacy render method (deprecated)
+	func render(repositories: [Repository], terminalWidth: Int) -> String {
 		let sortedRepositories = repositories.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
 		let maxLengths: MaxLengths = (
@@ -37,31 +103,47 @@ class UIRenderer {
 
 		var resultString = ""
 
-		self.renderHeader(&resultString, titles, maxLengths)
-		self.renderDivider(&resultString, maxLengths)
-		self.renderData(sortedRepositories, maxLengths, &resultString)
+		self.renderHeader(&resultString, titles, maxLengths, terminalWidth: terminalWidth)
+		self.renderDivider(&resultString, maxLengths, terminalWidth: terminalWidth)
+		self.renderData(sortedRepositories, maxLengths, &resultString, terminalWidth: terminalWidth)
 
 		return resultString
 	}
 
-	private func renderHeader(_ resultString: inout String, _ titles: Titles, _ maxLengths: MaxLengths) {
-		resultString.append(
-			"\(colors.brightWhite)\(titles.repo.padding(toLength: maxLengths.name, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
-			"\(colors.brightWhite)\(titles.branch.padding(toLength: maxLengths.branch, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
-			"\(colors.brightWhite)\(titles.ahead.padding(toLength: maxLengths.ahead, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
-			"\(colors.brightWhite)\(titles.behind.padding(toLength: maxLengths.behind, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
-			"\(colors.brightWhite)\(titles.changes.padding(toLength: maxLengths.changes, withPad: " ", startingAt: 0))\(colors.grey)\n"
-		)
+	private func renderHeader(_ resultString: inout String, _ titles: Titles, _ maxLengths: MaxLengths, terminalWidth: Int) {
+		var returnString = "\(colors.brightWhite)\(titles.repo.padding(toLength: maxLengths.name, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
+		"\(colors.brightWhite)\(titles.branch.padding(toLength: maxLengths.branch, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
+		"\(colors.brightWhite)\(titles.ahead.padding(toLength: maxLengths.ahead, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
+		"\(colors.brightWhite)\(titles.behind.padding(toLength: maxLengths.behind, withPad: " ", startingAt: 0)) │ \(colors.grey)" +
+		"\(colors.brightWhite)\(titles.changes.padding(toLength: maxLengths.changes, withPad: " ", startingAt: 0))\(colors.grey)"
+
+		let tableWidth = returnString.characterCountExcludingANSIEscapeCodes
+		let fillerWidth = terminalWidth - tableWidth
+
+		if fillerWidth > 0 {
+			returnString.append(String(repeating: backgroundCharacter, count: fillerWidth))
+		}
+
+		returnString.append("\n")
+		resultString.append(returnString)
 	}
 
-	private func renderDivider(_ resultString: inout String, _ maxLengths: MaxLengths) {
-		resultString.append(
-			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.name, withPad: "═", startingAt: 0))═╪═\(colors.grey)" +
+	private func renderDivider(_ resultString: inout String, _ maxLengths: MaxLengths, terminalWidth: Int) {
+		var returnString = "\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.name, withPad: "═", startingAt: 0))═╪═\(colors.grey)" +
 			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.branch, withPad: "═", startingAt: 0))═╪═\(colors.grey)" +
 			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.ahead, withPad: "═", startingAt: 0))═╪═\(colors.grey)" +
 			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.behind, withPad: "═", startingAt: 0))═╪═\(colors.grey)" +
-			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.changes, withPad: "═", startingAt: 0))\(colors.grey)\n"
-		)
+			"\(colors.brightWhite)\(emptyString.padding(toLength: maxLengths.changes, withPad: "═", startingAt: 0))\(colors.grey)"
+
+			let tableWidth = returnString.characterCountExcludingANSIEscapeCodes
+			let fillerWidth = terminalWidth - tableWidth
+
+			if fillerWidth > 0 {
+				returnString.append(String(repeating: backgroundCharacter, count: fillerWidth))
+			}
+
+			returnString.append("\n")
+			resultString.append(returnString)
 	}
 
 	private func repoName(repo: Repository, maxLength: Int) -> String {
@@ -101,7 +183,7 @@ class UIRenderer {
 		: padLeftConditional(repo.changes, toLength: maxLengths.changes, foregroundColor: color, resetColor: colors.grey, withPad: spacer)
 	}
 	
-	private func renderData(_ sortedRepositories: [Repository], _ maxLengths: MaxLengths, _ resultString: inout String) {
+	private func renderData(_ sortedRepositories: [Repository], _ maxLengths: MaxLengths, _ resultString: inout String, terminalWidth: Int) {
 		for repository in sortedRepositories {
 			var aheadColor = colors.purple
 			var behindColor = colors.red
@@ -123,13 +205,21 @@ class UIRenderer {
 			let behind = "\(colors.brightWhite)\(behindValue)\(colors.grey)"
 			let changes = "\(colors.brightWhite)\(changesValue)\(colors.grey)"
 
-			resultString.append(
-				"\(repoName) \(colors.brightWhite)│\(colors.grey) " +
-				"\(branchName) \(colors.brightWhite)│\(colors.grey) " +
-				"\(ahead) \(colors.brightWhite)│\(colors.grey) " +
-				"\(behind) \(colors.brightWhite)│\(colors.grey) " +
-				"\(changes)\n"
-			)
+			var returnString = "\(repoName) \(colors.brightWhite)│\(colors.grey) " +
+			"\(branchName) \(colors.brightWhite)│\(colors.grey) " +
+			"\(ahead) \(colors.brightWhite)│\(colors.grey) " +
+			"\(behind) \(colors.brightWhite)│\(colors.grey) " +
+			"\(changes)"
+
+			let tableWidth = returnString.characterCountExcludingANSIEscapeCodes
+			let fillerWidth = terminalWidth - tableWidth
+
+			if fillerWidth > 0 {
+				returnString.append(String(repeating: backgroundCharacter, count: fillerWidth))
+			}
+
+			returnString.append("\n")
+			resultString.append(returnString)
 		}
 	}
 
@@ -147,5 +237,15 @@ extension String {
 		}
 
 		return self
+	}
+
+	var withoutANSIEscapeCodes: String {
+		// Regular expression to match ANSI escape codes
+		let pattern = "\u{1B}\\[.*?m"
+		return self.replacingOccurrences(of: pattern, with: "", options: .regularExpression)
+	}
+
+	var characterCountExcludingANSIEscapeCodes: Int {
+		return withoutANSIEscapeCodes.count
 	}
 }
