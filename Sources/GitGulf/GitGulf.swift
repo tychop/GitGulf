@@ -98,27 +98,27 @@ class GitGulf {
 	}
 
 	func status() async {
-		print("GitGulf: Status check\n")
+		print("GitGulf: Status check:\n")
 		await run(gitCommand: .status)
-		print("Status check took \(formattedElapsedTime) seconds to complete")
+		print("Status check took \(formattedElapsedTime) seconds to complete.")
 	}
 
 	func fetch() async {
-		print("GitGulf: Fetch operation\n")
+		print("GitGulf: Fetch operation:\n")
 		await run(gitCommand: .fetch)
-		print("Fetch operation took \(formattedElapsedTime) seconds to complete")
+		print("Fetch operation took \(formattedElapsedTime) seconds to complete.")
 	}
 
 	func pull() async {
-		print("GitGulf: Pull operation\n")
+		print("GitGulf: Pull operation:\n")
 		await run(gitCommand: .pull)
-		print("Pull operation took \(formattedElapsedTime) seconds to complete")
+		print("Pull operation took \(formattedElapsedTime) seconds to complete.")
 	}
 
 	func checkout(branch: String) async {
-		print("GitGulf: Switching to branch \(branch)\n")
+		print("GitGulf: Switched to branch \(branch):\n")
 		await run(gitCommand: .checkout(branch))
-		print("Switching to branch \(branch) took \(formattedElapsedTime) seconds to complete")
+		print("Switching to branch \(branch) took \(formattedElapsedTime) seconds to complete.")
 	}
 
 	func moveCursorUp(nrOfLines: Int) {

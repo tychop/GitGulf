@@ -15,6 +15,14 @@ class Repository: Hashable {
 	var ahead: String
 	var behind: String
 	var changes: String
+
+	let occurrencesOfBranchNamesToReplace = [
+		"heads/",
+		"remotes/",
+		"remotes/o",
+		"origin/",
+		"tags/"
+	]
 	var colorState = false
 
 	init(
@@ -37,6 +45,9 @@ class Repository: Hashable {
 		reset()
 		
 		branch = try await Shell.execute("git", "-C", path, "rev-parse", "--abbrev-ref", "HEAD").output
+		for occurrence in occurrencesOfBranchNamesToReplace {
+			branch = branch.replacingOccurrences(of: occurrence, with: "")
+		}
 
 		let statusOutput = try await Shell.execute("git", "-C", path, "status", "--porcelain", "--branch").output
 		if let aheadMatch = statusOutput.range(of: "ahead \\d+", options: .regularExpression) {
