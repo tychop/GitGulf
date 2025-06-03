@@ -66,9 +66,9 @@ class Repository: Hashable {
 		colorState = true
 	}
 
-	func checkout(branch: String) async throws {
-		try await Shell.execute("git", "-C", path, "checkout", branch)
-		try await finish()
+	func checkout(branch: String) async {
+		_ = try? await Shell.execute("git", "-C", path, "checkout", branch)
+		_ = try? await finish()
 	}
 
 	func fetch() async throws {

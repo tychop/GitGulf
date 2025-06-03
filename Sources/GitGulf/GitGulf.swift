@@ -67,7 +67,7 @@ class GitGulf {
 						case .pull:
 							try await repository.pull()
 						case .checkout(let branch):
-							try await repository.checkout(branch: branch)
+							await repository.checkout(branch: branch)
 						}
 					} catch {
 						print("Failed to complete \(gitCommand) for \(repository.name): \(error)")
