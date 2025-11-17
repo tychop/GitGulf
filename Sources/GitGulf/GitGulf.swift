@@ -71,8 +71,7 @@ class GitGulf {
 						try await repository.checkout(branch: branch)
 					}
 				} catch {
-					// Log error but continue with other repos
-					FileHandle.standardError.write("Error: Failed to complete operation for \(repository.name): \(error)\n".data(using: .utf8) ?? Data())
+					// Silently fail - don't disrupt the UI output
 				}
 
 				await MainActor.run {

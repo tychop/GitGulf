@@ -27,7 +27,7 @@ class RepositoryManager {
 				}
 			}
 		} catch {
-			print("Failed to enumerate directories: \(error)")
+			// Silently fail - don't disrupt output
 		}
 	}
 
@@ -62,8 +62,8 @@ class RepositoryManager {
 		do {
 			try await repository.status()
 		} catch {
-			FileHandle.standardError.write("Warning: Failed to get git status for \(repository.name): \(error)\n".data(using: .utf8) ?? Data())
-			return // Skip this repo but continue with others
+			// Silently skip repos that can't be read
+			return
 		}
 		repository.colorState = false
 		
