@@ -20,9 +20,9 @@ func run() async {
 	let argument = arguments[1]
 	let gitgulf = GitGulf()
 	
-		if argument == "--version" {
-			print("GitGulf v0.2.1")
-			print("https://github.com/tychop/GitGulf")
+	if argument == "--version" {
+		print("GitGulf v0.3.0")
+		print("https://github.com/tychop/GitGulf")
 	} else if argument == "-b" {
 		guard arguments.count > 2 else {
 			FileHandle.standardError.write("Error: Branch name not provided. Usage: gitgulf -b branch\n".data(using: .utf8) ?? Data())
