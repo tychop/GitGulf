@@ -10,7 +10,7 @@ import Foundation
 
 func run() async {
 	let arguments = CommandLine.arguments
-	let usageString = "Usage: gitgulf [ status | fetch | pull | development | master | -b branch | --version ]"
+	let usageString = "Usage: gitgulf [ status | fetch | pull | rebase | development | master | -b branch | --version ]"
 
 	guard arguments.count > 1 else {
 		FileHandle.standardError.write("Error: No arguments provided. \(usageString)\n".data(using: .utf8) ?? Data())
@@ -38,6 +38,8 @@ func run() async {
 			await gitgulf.fetch()
 		case "pull":
 			await gitgulf.pull()
+		case "rebase":
+			await gitgulf.rebase()
 		case "development":
 			await gitgulf.checkout(branch: "development")
 		case "master":

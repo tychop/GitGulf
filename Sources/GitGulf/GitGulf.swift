@@ -12,6 +12,7 @@ enum GitCommand {
 	case status
 	case fetch
 	case pull
+	case rebase
 	case checkout(String)
 }
 
@@ -65,9 +66,11 @@ class GitGulf {
 						try await repository.status()
 					case .fetch:
 						try await repository.fetch()
-					case .pull:
-						try await repository.pull()
-					case .checkout(let branch):
+				case .pull:
+					try await repository.pull()
+				case .rebase:
+					try await repository.rebase()
+				case .checkout(let branch):
 						try await repository.checkout(branch: branch)
 					}
 				} catch {
@@ -115,6 +118,12 @@ class GitGulf {
 		print("GitGulf: Pull operation:\n")
 		await run(gitCommand: .pull)
 		print("Pull operation took \(formattedElapsedTime) seconds to complete.")
+	}
+
+	func rebase() async {
+		print("GitGulf: Rebase operation:\n")
+		await run(gitCommand: .rebase)
+		print("Rebase operation took \(formattedElapsedTime) seconds to complete.")
 	}
 
 	func checkout(branch: String) async {

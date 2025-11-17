@@ -135,6 +135,18 @@ class Repository: Hashable, @unchecked Sendable {
 		}
 	}
 
+	func rebase() async throws {
+		do {
+			let result = try await Shell.execute("git", "-C", path, "pull", "--rebase")
+			guard result.status == 0 else {
+				throw ShellError.executionFailed("Failed to rebase \(name): \(result.output)")
+			}
+			try await finish()
+		} catch {
+			throw ShellError.executionFailed("Rebase failed for \(name): \(error.localizedDescription)")
+		}
+	}
+
 	func reset() {
 		stateQueue.async(flags: .barrier) { [weak self] in
 			self?.ahead = "0"
