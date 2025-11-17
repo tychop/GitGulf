@@ -7,7 +7,7 @@
 
 GitGulf is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a full collection of repositories, GitGulf aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
-### Latest Release: v0.2.0
+### Latest Release: v0.2.1
 
 **Major security and reliability improvements:**
 - ✅ Fixed command injection vulnerability in branch names
