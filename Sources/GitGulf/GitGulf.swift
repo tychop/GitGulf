@@ -119,11 +119,10 @@ class GitGulf {
 		await run(gitCommand: .pull)
 		print("Pull operation took \(formattedElapsedTime) seconds to complete.")
 	}
-tfunc rebase() async {
+	func rebase() async {
 		print("GitGulf: Pull --rebase operation:\n")
 		await run(gitCommand: .rebase)
 		print("Pull --rebase operation took \(formattedElapsedTime) seconds to complete.")
-	}
 	}
 
 	func checkout(branch: String) async {
