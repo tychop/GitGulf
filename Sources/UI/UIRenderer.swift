@@ -21,14 +21,31 @@ class UIRenderer {
 	private let horizontalDivider = "═"
 
 	private let titles: Titles = (repo: "Repository Name", branch: "Branch", ahead: "Ahead", behind: "Behind", changes: "Changes")
-	private let colors = (
-		red:         "\u{001B}[31m",
-		purple:      "\u{001B}[35m",
-		cyan:        "\u{001B}[36m",
-		grey:        "\u{001B}[90m",
-		brightGreen: "\u{001B}[92m",
-		brightWhite: "\u{001B}[97m"
-	)
+	
+	// Track whether to use ANSI colors
+	private var useANSIColors: Bool = true
+	
+	private var colors: (red: String, purple: String, cyan: String, grey: String, brightGreen: String, brightWhite: String) {
+		if useANSIColors {
+			return (
+				red:         "\u{001B}[31m",
+				purple:      "\u{001B}[35m",
+				cyan:        "\u{001B}[36m",
+				grey:        "\u{001B}[90m",
+				brightGreen: "\u{001B}[92m",
+				brightWhite: "\u{001B}[97m"
+			)
+		} else {
+			return (
+				red:         "",
+				purple:      "",
+				cyan:        "",
+				grey:        "",
+				brightGreen: "",
+				brightWhite: ""
+			)
+		}
+	}
 
 	private var columnDivider: String {
 		return "\(colors.brightWhite) \(verticalDivider) \(colors.grey)"
@@ -38,7 +55,8 @@ class UIRenderer {
 		return "\(colors.brightWhite)═\(intersection)═\(colors.grey)"
 	}
 
-	func render(repositories: [Repository], terminalWidth: Int) -> String {
+	func render(repositories: [Repository], terminalWidth: Int = 80, useANSIColors: Bool = true) -> String {
+		self.useANSIColors = useANSIColors
 		let sortedRepositories = repositories.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
 		let maxLengths: MaxLengths = (

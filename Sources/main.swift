@@ -13,20 +13,20 @@ func run() async {
 	let usageString = "Usage: gitgulf [ status | fetch | pull | development | master | -b branch | --version ]"
 
 	guard arguments.count > 1 else {
-		print("No arguments provided. \(usageString)")
-		return
+		FileHandle.standardError.write("Error: No arguments provided. \(usageString)\n".data(using: .utf8) ?? Data())
+		exit(1)
 	}
 	
 	let argument = arguments[1]
 	let gitgulf = GitGulf()
 	
 	if argument == "--version" {
-		print("GitGulf v0.1.4")
+		print("GitGulf v0.1.5")
 		print("https://github.com/tychop/GitGulf")
 	} else if argument == "-b" {
 		guard arguments.count > 2 else {
-			print("Branch name not provided. Usage: gitgulf -b branch")
-			return
+			FileHandle.standardError.write("Error: Branch name not provided. Usage: gitgulf -b branch\n".data(using: .utf8) ?? Data())
+			exit(1)
 		}
 		let branchName = arguments[2]
 		await gitgulf.checkout(branch: branchName)
@@ -43,7 +43,8 @@ func run() async {
 		case "master":
 			await gitgulf.checkout(branch: "master")
 		default:
-			print("Invalid argument: \(argument). \(usageString)")
+			FileHandle.standardError.write("Error: Invalid argument: \(argument). \(usageString)\n".data(using: .utf8) ?? Data())
+			exit(1)
 		}
 		print("")
 	}

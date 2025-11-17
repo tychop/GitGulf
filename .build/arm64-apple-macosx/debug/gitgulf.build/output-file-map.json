@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/master.swiftdeps"
+  },
+  "/Users/tychop/Developer/github/GitGulf/Sources/GitGulf/GitGulf.swift": {
+    "dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.d",
+    "object": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.swift.o",
+    "swiftmodule": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf~partial.swiftmodule",
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.swiftdeps",
+    "diagnostics": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.dia"
+  },
+  "/Users/tychop/Developer/github/GitGulf/Sources/GitGulf/RepositoryManager.swift": {
+    "dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.d",
+    "object": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.swift.o",
+    "swiftmodule": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.swiftdeps",
+    "diagnostics": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.dia"
+  },
+  "/Users/tychop/Developer/github/GitGulf/Sources/Model/Repository.swift": {
+    "dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.d",
+    "object": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.swift.o",
+    "swiftmodule": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository~partial.swiftmodule",
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.swiftdeps",
+    "diagnostics": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.dia"
+  },
+  "/Users/tychop/Developer/github/GitGulf/Sources/Services/ShellService.swift": {
+    "dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.d",
+    "object": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.swift.o",
+    "swiftmodule": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService~partial.swiftmodule",
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.swiftdeps",
+    "diagnostics": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.dia"
+  },
+  "/Users/tychop/Developer/github/GitGulf/Sources/UI/UIRenderer.swift": {
+    "dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.d",
+    "object": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.swift.o",
+    "swiftmodule": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer~partial.swiftmodule",
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.swiftdeps",
+    "diagnostics": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.dia"
+  },
+  "/Users/tychop/Developer/github/GitGulf/Sources/main.swift": {
+    "dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.d",
+    "object": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.swift.o",
+    "swiftmodule": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main~partial.swiftmodule",
+    "swift-dependencies": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.swiftdeps",
+    "diagnostics": "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.dia"
+  }
+}

@@ -1,0 +1,81 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "PackageStructure": ["<PackageStructure>"]
+  "gitgulf-arm64-apple-macosx26.0-debug.exe": ["<gitgulf-arm64-apple-macosx26.0-debug.exe>"]
+  "gitgulf-arm64-apple-macosx26.0-debug.module": ["<gitgulf-arm64-apple-macosx26.0-debug.module>"]
+  "main": ["<gitgulf-arm64-apple-macosx26.0-debug.exe>","<gitgulf-arm64-apple-macosx26.0-debug.module>"]
+  "test": ["<gitgulf-arm64-apple-macosx26.0-debug.exe>","<gitgulf-arm64-apple-macosx26.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/tychop/Developer/github/GitGulf/Sources/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf":
+    is-mutated: true
+commands:
+  "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf-entitlement.plist"]
+    description: "Write auxiliary file /Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf-entitlement.plist"
+
+  "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/tychop/Developer/github/GitGulf/Sources/GitGulf/GitGulf.swift","/Users/tychop/Developer/github/GitGulf/Sources/GitGulf/RepositoryManager.swift","/Users/tychop/Developer/github/GitGulf/Sources/Model/Repository.swift","/Users/tychop/Developer/github/GitGulf/Sources/Services/ShellService.swift","/Users/tychop/Developer/github/GitGulf/Sources/UI/UIRenderer.swift","/Users/tychop/Developer/github/GitGulf/Sources/main.swift"]
+    outputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/sources"]
+    description: "Write auxiliary file /Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/sources"
+
+  "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.swift.o"]
+    outputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.product/Objects.LinkFileList"
+
+  "/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<gitgulf-arm64-apple-macosx26.0-debug.exe>":
+    tool: phony
+    inputs: ["<gitgulf-arm64-apple-macosx26.0-debug.exe-CodeSigning>"]
+    outputs: ["<gitgulf-arm64-apple-macosx26.0-debug.exe>"]
+
+  "<gitgulf-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/Modules/gitgulf.swiftmodule"]
+    outputs: ["<gitgulf-arm64-apple-macosx26.0-debug.module>"]
+
+  "C.gitgulf-arm64-apple-macosx26.0-debug.exe":
+    tool: shell
+    inputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.product/Objects.LinkFileList"]
+    outputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/gitgulf"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug","-o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf","-module-name","gitgulf","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-alias","-Xlinker","_gitgulf_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx12.0","-Xlinker","-add_ast_path","-Xlinker","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/Modules/gitgulf.swiftmodule","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.gitgulf-arm64-apple-macosx26.0-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf-entitlement.plist"]
+    outputs: ["<gitgulf-arm64-apple-macosx26.0-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/gitgulf"
+    args: ["codesign","--force","--sign","-","--entitlements","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf-entitlement.plist","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf"]
+
+  "C.gitgulf-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/tychop/Developer/github/GitGulf/Sources/GitGulf/GitGulf.swift","/Users/tychop/Developer/github/GitGulf/Sources/GitGulf/RepositoryManager.swift","/Users/tychop/Developer/github/GitGulf/Sources/Model/Repository.swift","/Users/tychop/Developer/github/GitGulf/Sources/Services/ShellService.swift","/Users/tychop/Developer/github/GitGulf/Sources/UI/UIRenderer.swift","/Users/tychop/Developer/github/GitGulf/Sources/main.swift","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/sources"]
+    outputs: ["/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/GitGulf.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/RepositoryManager.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/Repository.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/ShellService.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/UIRenderer.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/main.swift.o","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/Modules/gitgulf.swiftmodule"]
+    description: "Compiling Swift Module 'gitgulf' (6 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","gitgulf","-emit-dependencies","-emit-module","-emit-module-path","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/Modules/gitgulf.swiftmodule","-output-file-map","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/output-file-map.json","-incremental","-c","@/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/gitgulf.build/sources","-I","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx12.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j8","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/tychop/Developer/github/GitGulf/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","gitgulf_main","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","gitgulf"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/tychop/Developer/github/GitGulf/Sources/","/Users/tychop/Developer/github/GitGulf/Package.swift","/Users/tychop/Developer/github/GitGulf/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

@@ -33,23 +33,40 @@ class RepositoryManager {
 
 	private func processDirectory(_ directory: String, currentPathURL: URL) async {
 		let fileManager = FileManager.default
+		
+		// Skip hidden directories (starting with .)
+		guard !directory.hasPrefix(".") else { return }
+		
 		let directoryURL = currentPathURL.appendingPathComponent(directory)
 
 		var isDirectory: ObjCBool = false
-		let isGitDirectory = fileManager.fileExists(atPath: directoryURL.path, isDirectory: &isDirectory) && isDirectory.boolValue && fileManager.fileExists(atPath: directoryURL.appendingPathComponent(".git").path)
-
-		if isGitDirectory {
-			let repository = Repository(name: directory, path: directoryURL.path)
-
-			do {
-				try await repository.status()
-			} catch {
-				print("Failed to get git status for \(repository.name): \(error)")
-				exit(1)
+		let exists = fileManager.fileExists(atPath: directoryURL.path, isDirectory: &isDirectory)
+		guard exists && isDirectory.boolValue else { return }
+		
+		// Check if it's a symlink (don't follow symlinks for repo discovery)
+		do {
+			let resourceValues = try directoryURL.resourceValues(forKeys: [.isSymbolicLinkKey])
+			if resourceValues.isSymbolicLink == true {
+				return // Skip symlinks
 			}
-			repository.colorState = false
-			
-			self.repositories.insert(repository)
+		} catch {
+			// If we can't determine, continue anyway
 		}
+		
+		// Check for .git directory
+		let gitPath = directoryURL.appendingPathComponent(".git").path
+		guard fileManager.fileExists(atPath: gitPath) else { return }
+		
+		let repository = Repository(name: directory, path: directoryURL.path)
+
+		do {
+			try await repository.status()
+		} catch {
+			FileHandle.standardError.write("Warning: Failed to get git status for \(repository.name): \(error)\n".data(using: .utf8) ?? Data())
+			return // Skip this repo but continue with others
+		}
+		repository.colorState = false
+		
+		self.repositories.insert(repository)
 	}
 }

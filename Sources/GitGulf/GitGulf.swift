@@ -19,6 +19,7 @@ class GitGulf {
 	private let startTime = Date()
 	private let composer = UIRenderer()
 	@MainActor private lazy var repositoryManager = RepositoryManager()
+	private let isInteractive: Bool = isatty(STDOUT_FILENO) != 0
 	
 	/// Returns the elapsed time since start with two decimal places
 	private var formattedElapsedTime: String {
@@ -55,32 +56,32 @@ class GitGulf {
 		await repositoryManager.loadRepositories()
 		let repositories = await repositoryManager.repositories
 
-		await withTaskGroup(of: Void.self) { group in
-			for repository in repositories {
-				group.addTask {
-					do {
-						switch gitCommand {
-						case .status:
-							try await repository.status()
-						case .fetch:
-							try await repository.fetch()
-						case .pull:
-							try await repository.pull()
-						case .checkout(let branch):
-							await repository.checkout(branch: branch)
-						}
-					} catch {
-						print("Failed to complete \(gitCommand) for \(repository.name): \(error)")
-						exit(1)
+	await withTaskGroup(of: Void.self) { group in
+		for repository in repositories {
+			group.addTask {
+				do {
+					switch gitCommand {
+					case .status:
+						try await repository.status()
+					case .fetch:
+						try await repository.fetch()
+					case .pull:
+						try await repository.pull()
+					case .checkout(let branch):
+						try await repository.checkout(branch: branch)
 					}
+				} catch {
+					// Log error but continue with other repos
+					FileHandle.standardError.write("Error: Failed to complete operation for \(repository.name): \(error)\n".data(using: .utf8) ?? Data())
+				}
 
-					await MainActor.run {
-						repository.colorState = true
-						self.updateUI()
-					}
+				await MainActor.run {
+					repository.colorState = true
+					self.updateUI()
 				}
 			}
 		}
+	}
 
 		await MainActor.run {
 			self.updateUI(finalFrame: true)
@@ -90,10 +91,12 @@ class GitGulf {
 	}
 
 	@MainActor func updateUI(finalFrame: Bool = false) {
-		let frame = composer.render(repositories: Array(repositoryManager.repositories), terminalWidth: terminalWidth)
-		print(frame)
-		if finalFrame == false {
-			moveCursorUp(nrOfLines: frame.split(separator: "\n").count + 1)
+		let frame = composer.render(repositories: Array(repositoryManager.repositories), useANSIColors: isInteractive)
+		print(frame, terminator: "")
+		if finalFrame == false && isInteractive {
+			moveCursorUp(nrOfLines: frame.split(separator: "\n").count)
+		} else if finalFrame == false {
+			print("")
 		}
 	}
 
