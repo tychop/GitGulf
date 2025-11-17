@@ -7,6 +7,18 @@
 
 GitGulf is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a full collection of repositories, GitGulf aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
+### Latest Release: v0.2.0
+
+**Major security and reliability improvements:**
+- ✅ Fixed command injection vulnerability in branch names
+- ✅ Improved thread safety and race condition fixes
+- ✅ Graceful error recovery (no more crashes on repo failures)
+- ✅ Better git output parsing for locale independence
+- ✅ Proper error output routing (stderr compliance)
+- ✅ TTY-aware ANSI code handling
+
+See [AUDIT_FIXES.md](AUDIT_FIXES.md) for detailed before/after comparisons.
+
 &nbsp;
 
 Gif showing `ggs` (status), `ggf` (fetch), & `ggp` (pull):
@@ -45,8 +57,10 @@ The binary will be located at: `gitgulf/.build/release/gitgulf`
 
 ### Requirements
 
-- Swift compiler
-- Homebrew
+- **Swift**: 5.10 or later
+- **macOS**: 12.0 or later (for modern async/await support)
+- **Git**: Any recent version
+- **Homebrew**: (optional, for installation)
 
 ## Usage
 
@@ -83,6 +97,23 @@ ggm        : Switch all repositories to the 'master' branch.
 ggd        : Switch all repositories to the 'development' branch.
 ggb BRANCH : Switch all repositories to the specified BRANCH.
 ```
+
+## Documentation
+
+- **[WARP.md](WARP.md)**: Development guide and architecture overview
+- **[AUDIT_FIXES.md](AUDIT_FIXES.md)**: Security and reliability improvements (v0.2.0)
+- **[README.md](README.md)**: This file
+
+## Security
+
+GitGulf v0.2.0 includes comprehensive security improvements:
+
+- ✅ Input validation to prevent command injection
+- ✅ Thread-safe repository state management
+- ✅ Proper error handling without silent failures
+- ✅ Validated git command execution
+
+For security concerns, please report to the GitHub repository.
 
 ## License
 
