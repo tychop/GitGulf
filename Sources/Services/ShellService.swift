@@ -9,7 +9,7 @@
 import Foundation
 
 /// Errors that can occur during shell command execution
-enum ShellError: Error, Sendable {
+enum ShellError: Error, LocalizedError, Sendable {
 	/// The process execution failed with a specific reason
 	case executionFailed(String)
 	
@@ -33,6 +33,27 @@ enum ShellError: Error, Sendable {
 	
 	/// Error occurred during process initialization
 	case processSetupError(String)
+	
+	var errorDescription: String? {
+		switch self {
+		case .executionFailed(let reason):
+			return "Command execution failed: \(reason)"
+		case .timeout(let command, let seconds):
+			return "Command timeout after \(seconds) seconds: \(command)"
+		case .interrupted(let command):
+			return "Command interrupted: \(command)"
+		case .outputDecodingFailed:
+			return "Failed to decode command output as UTF-8"
+		case .outputTooLarge(let maxBytes):
+			return "Command output exceeded maximum size of \(maxBytes) bytes"
+		case .invalidWorkingDirectory(let path):
+			return "Working directory does not exist: \(path)"
+		case .outputReadError(let reason):
+			return "Failed to read command output: \(reason)"
+		case .processSetupError(let reason):
+			return "Failed to setup process: \(reason)"
+		}
+	}
 }
 
 /// Configuration options for shell command execution
