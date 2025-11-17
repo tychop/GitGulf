@@ -30,6 +30,7 @@ Gif showing `ggs` (status), `ggf` (fetch), & `ggp` (pull):
 - **Status**: View the current status of all repositories in a directory.
 - **Fetch**: Perform a `git fetch` on all repositories.
 - **Pull**: Perform a `git pull` on all repositories.
+- **Pull with Rebase**: Perform a `git pull --rebase` on all repositories.
 - **Switch Branch**: Swiftly switch between branches on all repositories.
 
 ## Installation
@@ -78,6 +79,7 @@ Available commands:
 status        : Show all repository statuses.
 fetch         : Fetch all repositories.
 pull          : Pull all repositories.
+rebase        : Pull with rebase on all repositories.
 master        : Switch all repositories to the 'master' branch.
 development   : Switch all repositories to the 'development' branch.
 -b <branch>   : Switch all repositories to the specified branch.
@@ -91,6 +93,7 @@ For quicker operations, use the abbreviated commands:
 ggs        : Show all the repository statuses.
 ggf        : Fetch all repositories.
 ggp        : Pull all repositories.
+ggpr       : Pull with rebase on all repositories.
 ggm        : Switch all repositories to the 'master' branch.
 ggd        : Switch all repositories to the 'development' branch.
 ggb BRANCH : Switch all repositories to the specified BRANCH.
@@ -102,7 +105,7 @@ ggb BRANCH : Switch all repositories to the specified BRANCH.
 
 ## Security
 
-GitGulf v0.2.0 includes comprehensive security improvements:
+GitGulf v0.2.1 includes comprehensive security improvements:
 
 - ✅ Input validation to prevent command injection
 - ✅ Thread-safe repository state management
