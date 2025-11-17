@@ -7,16 +7,6 @@
 
 GitGulf is a command-line tool designed to help you manage and navigate through multiple Git repositories with ease. Whether you are dealing with only a handful or a full collection of repositories, GitGulf aims to streamline common Git operations like fetching, pulling, and switching branches across multiple repositories, making your development workflow more efficient and effective.
 
-### Latest Release: v0.2.1
-
-**Major security and reliability improvements:**
-- ✅ Fixed command injection vulnerability in branch names
-- ✅ Improved thread safety and race condition fixes
-- ✅ Graceful error recovery (no more crashes on repo failures)
-- ✅ Better git output parsing for locale independence
-- ✅ Proper error output routing (stderr compliance)
-- ✅ TTY-aware ANSI code handling
-
 &nbsp;
 
 Gif showing `ggs` (status), `ggf` (fetch), & `ggp` (pull):
@@ -102,17 +92,6 @@ ggb BRANCH : Switch all repositories to the specified BRANCH.
 ## Documentation
 
 - **[README.md](README.md)**: This file with overview and usage instructions
-
-## Security
-
-GitGulf v0.2.1 includes comprehensive security improvements:
-
-- ✅ Input validation to prevent command injection
-- ✅ Thread-safe repository state management
-- ✅ Proper error handling without silent failures
-- ✅ Validated git command execution
-
-For security concerns, please report to the GitHub repository.
 
 ## License
 
