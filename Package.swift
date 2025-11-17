@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
 	name: "gitgulf",
 	platforms: [
-		.macOS(.v10_15)  // Specify the minimum macOS version
+		.macOS(.v12)     // Modern Swift concurrency requires macOS 12+
 	],
 	targets: [
 		// Targets are the basic building blocks of a package, defining a module or a test suite.

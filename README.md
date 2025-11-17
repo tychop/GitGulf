@@ -45,6 +45,7 @@ The binary will be located at: `gitgulf/.build/release/gitgulf`
 
 ### Requirements
 
+- Swift compiler
 - Homebrew
 
 ## Usage
