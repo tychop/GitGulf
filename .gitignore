@@ -57,10 +57,6 @@ Temporary Items
 *.swo
 *~
 .DS_Store
-*.bak
-*.bak.*
-WARP.md
-AUDIT_FIXES.md
 
 # Build artifacts
 .build/
@@ -82,3 +78,7 @@ AUDIT_FIXES.md
 dist/
 *-test-env/
 gitgulf-test-env/
+*.bak
+*.bak.*
+WARP.md
+AUDIT_FIXES.md
