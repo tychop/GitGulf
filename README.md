@@ -17,8 +17,6 @@ GitGulf is a command-line tool designed to help you manage and navigate through 
 - ✅ Proper error output routing (stderr compliance)
 - ✅ TTY-aware ANSI code handling
 
-See [AUDIT_FIXES.md](AUDIT_FIXES.md) for detailed before/after comparisons.
-
 &nbsp;
 
 Gif showing `ggs` (status), `ggf` (fetch), & `ggp` (pull):
@@ -100,9 +98,7 @@ ggb BRANCH : Switch all repositories to the specified BRANCH.
 
 ## Documentation
 
-- **[WARP.md](WARP.md)**: Development guide and architecture overview
-- **[AUDIT_FIXES.md](AUDIT_FIXES.md)**: Security and reliability improvements (v0.2.0)
-- **[README.md](README.md)**: This file
+- **[README.md](README.md)**: This file with overview and usage instructions
 
 ## Security
 
