@@ -77,3 +77,8 @@ AUDIT_FIXES.md
 *.xctest/
 .swiftformat
 .swiftlint
+
+# Project-specific
+dist/
+*-test-env/
+gitgulf-test-env/
