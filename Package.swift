@@ -1,4 +1,4 @@
-// swift-tools-version: 5.10
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -9,9 +9,19 @@ let package = Package(
 		.macOS(.v12)     // Modern Swift concurrency requires macOS 12+
 	],
 	targets: [
-		// Targets are the basic building blocks of a package, defining a module or a test suite.
-		// Targets can depend on other targets in this package and products from dependencies.
+		// Core library; contains all business logic
+		.target(
+			name: "GitGulfLib"
+		),
+		// CLI executable that uses the library
 		.executableTarget(
-			name: "gitgulf"),
+			name: "gitgulf",
+			dependencies: ["GitGulfLib"]
+		),
+		// Tests link against the library (not the executable)
+		.testTarget(
+			name: "GitGulfTests",
+			dependencies: ["GitGulfLib"]
+		),
 	]
 )

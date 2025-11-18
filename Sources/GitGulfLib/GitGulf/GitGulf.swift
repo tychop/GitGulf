@@ -16,11 +16,13 @@ enum GitCommand {
 	case checkout(String)
 }
 
-class GitGulf {
+public class GitGulf: @unchecked Sendable {
 	private let startTime = Date()
 	private let composer = UIRenderer()
 	@MainActor private lazy var repositoryManager = RepositoryManager()
 	private let isInteractive: Bool = isatty(STDOUT_FILENO) != 0
+	
+	public init() {}
 	
 	/// Returns the elapsed time since start with two decimal places
 	private var formattedElapsedTime: String {
@@ -102,30 +104,30 @@ class GitGulf {
 		}
 	}
 
-	func status() async {
+	public func status() async {
 		print("GitGulf: Status check:\n")
 		await run(gitCommand: .status)
 		print("Status check took \(formattedElapsedTime) seconds to complete.")
 	}
 
-	func fetch() async {
+	public func fetch() async {
 		print("GitGulf: Fetch operation:\n")
 		await run(gitCommand: .fetch)
 		print("Fetch operation took \(formattedElapsedTime) seconds to complete.")
 	}
 
-	func pull() async {
+	public func pull() async {
 		print("GitGulf: Pull operation:\n")
 		await run(gitCommand: .pull)
 		print("Pull operation took \(formattedElapsedTime) seconds to complete.")
 	}
-	func rebase() async {
+	public func rebase() async {
 		print("GitGulf: Pull --rebase operation:\n")
 		await run(gitCommand: .rebase)
 		print("Pull --rebase operation took \(formattedElapsedTime) seconds to complete.")
 	}
 
-	func checkout(branch: String) async {
+	public func checkout(branch: String) async {
 		print("GitGulf: Switched to branch \(branch):\n")
 		await run(gitCommand: .checkout(branch))
 		print("Switching to branch \(branch) took \(formattedElapsedTime) seconds to complete.")
