@@ -1,12 +1,13 @@
 //
+//  main.swift
 //  GitGulf
-//
 //
 //  Created by Tycho Pandelaar on 06/09/2024.
 //  Copyright © 2024 Tycho Pandelaar. All rights reserved.
 //
 
 import Foundation
+import GitGulfLib
 
 func run() async {
 	let arguments = CommandLine.arguments
