@@ -25,9 +25,14 @@ class UIRenderer {
 	// Track whether to use ANSI colors
 	private var useANSIColors: Bool = true
 	
-	private var colors: (red: String, purple: String, cyan: String, grey: String, brightGreen: String, brightWhite: String) {
+	// Cached colors for current render
+	private var currentColors: (red: String, purple: String, cyan: String, grey: String, brightGreen: String, brightWhite: String) = ("", "", "", "", "", "")
+	private var currentColumnDivider: String = ""
+	private var currentIntersectionFormatted: String = ""
+	
+	private func updateColorCache() {
 		if useANSIColors {
-			return (
+			currentColors = (
 				red:         "\u{001B}[31m",
 				purple:      "\u{001B}[35m",
 				cyan:        "\u{001B}[36m",
@@ -36,7 +41,7 @@ class UIRenderer {
 				brightWhite: "\u{001B}[97m"
 			)
 		} else {
-			return (
+			currentColors = (
 				red:         "",
 				purple:      "",
 				cyan:        "",
@@ -45,18 +50,25 @@ class UIRenderer {
 				brightWhite: ""
 			)
 		}
+		currentColumnDivider = "\(currentColors.brightWhite) \(verticalDivider) \(currentColors.grey)"
+		currentIntersectionFormatted = "\(currentColors.brightWhite)═\(intersection)═\(currentColors.grey)"
+	}
+	
+	private var colors: (red: String, purple: String, cyan: String, grey: String, brightGreen: String, brightWhite: String) {
+		return currentColors
 	}
 
 	private var columnDivider: String {
-		return "\(colors.brightWhite) \(verticalDivider) \(colors.grey)"
+		return currentColumnDivider
 	}
 
 	private var intersectionFormatted: String {
-		return "\(colors.brightWhite)═\(intersection)═\(colors.grey)"
+		return currentIntersectionFormatted
 	}
 
 	func render(repositories: [Repository], terminalWidth: Int = 80, useANSIColors: Bool = true) -> String {
 		self.useANSIColors = useANSIColors
+		updateColorCache()
 		let sortedRepositories = repositories.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 
 		let maxLengths: MaxLengths = (
@@ -198,7 +210,7 @@ extension String {
 	}
 
 	var withoutANSIEscapeCodes: String {
-		let pattern = "\u{1B}\\[.*?m"
+		let pattern = "\u{1B}\\[[0-9;]*m"
 		return self.replacingOccurrences(of: pattern, with: "", options: .regularExpression)
 	}
 
