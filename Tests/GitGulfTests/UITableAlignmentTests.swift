@@ -36,9 +36,9 @@ class UITableAlignmentTests: XCTestCase {
 		let table = renderer.render(repositories: [repo], useANSIColors: false)
 		let lines = extractLines(table)
 
-		XCTAssertGreaterThanOrEqual(lines.count, 3, "Table should have header, divider, and data rows")
+	XCTAssertGreaterThanOrEqual(lines.count, 3, "Table should have header, divider, and data rows")
 
-		let headerLine = lines[0]
+		// Header and divider lines verified by count check
 		let dividerLine = lines[1]
 
 		// Verify divider has intersections
@@ -177,9 +177,8 @@ class UITableAlignmentTests: XCTestCase {
 
 		// All data lines should have same column widths
 		for i in 2..<lines.count {
-			let dataLine = lines[i]
-			let dataVisible = dataLine.withoutANSIEscapeCodes
-
+			_ = lines[i] // Data line verified to exist by extracting lines
+			
 			for j in 0..<dividerPositions.count {
 				let start = (j == 0) ? 0 : dividerPositions[j - 1] + 1
 				let end = dividerPositions[j]

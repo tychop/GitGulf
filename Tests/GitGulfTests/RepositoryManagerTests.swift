@@ -2,9 +2,11 @@ import XCTest
 @testable import GitGulfLib
 
 class RepositoryManagerTests: XCTestCase {
-	func testRepositoryManagerInitialization() {
-		let manager = RepositoryManager()
-		XCTAssertNotNil(manager)
+	func testRepositoryManagerInitialization() async {
+		await MainActor.run {
+			let manager = RepositoryManager()
+			XCTAssertNotNil(manager)
+		}
 	}
 
 	func testRepositoryManagerEmptyRepositories() async {

@@ -7,6 +7,12 @@
 //
 
 import Foundation
+import Dispatch
+#if os(Linux)
+import Glibc
+#else
+import Darwin
+#endif
 
 /// Errors that can occur during shell command execution
 enum ShellError: Error, LocalizedError, Sendable {
@@ -214,23 +220,26 @@ private actor ShellExecutor {
 		// Create a dedicated serial queue for signal handling
 		let signalQueue = DispatchQueue(label: "com.gitgulf.shell.signal")
 		
-		// Setup SIGINT signal handling
-		signalSource = DispatchSource.makeSignalSource(signal: SIGINT, queue: signalQueue)
+		// Setup SIGINT signal handling with DispatchSourceSignal (cross-platform)
+		// Ensure default SIGINT is ignored so Dispatch can receive it
+		_ = signal(SIGINT, SIG_IGN)
 		
+		// Create signal source
+		let source = DispatchSource.makeSignalSource(signal: SIGINT, queue: signalQueue)
+		self.signalSource = source
 		
 		// Define a properly isolated @Sendable handler for interruption
 		let interruptHandler: @Sendable () -> Void = { [weak self] in
 			Task { [weak self] in
 				guard let self = self else { return }
-				
 				// Call actor-isolated method to handle interruption
 				await self.handleInterruption(continuation: continuation)
 			}
 		}
 		
 		// Set and activate the signal handler
-		signalSource?.setEventHandler(handler: interruptHandler)
-		signalSource?.resume()
+		source.setEventHandler(handler: interruptHandler)
+		source.resume()
 	}
 	
 	// MARK: - Process Execution

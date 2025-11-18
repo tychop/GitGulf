@@ -1,12 +1,16 @@
 //
 //  GitGulf.swift
 //
-//
 //  Created by Tycho Pandelaar on 07/09/2024.
-//  Copyright © 2024 KLM. All rights reserved.
 //
 
 import Foundation
+import Dispatch
+#if os(Linux)
+import Glibc
+#else
+import Darwin
+#endif
 
 enum GitCommand {
 	case status
@@ -20,7 +24,10 @@ public class GitGulf: @unchecked Sendable {
 	private let startTime = Date()
 	private let composer = UIRenderer()
 	@MainActor private lazy var repositoryManager = RepositoryManager()
-	private let isInteractive: Bool = isatty(STDOUT_FILENO) != 0
+	private let isInteractive: Bool = {
+		let fd = Int32(STDOUT_FILENO)
+		return isatty(fd) != 0
+	}()
 	
 	public init() {}
 	
@@ -28,72 +35,46 @@ public class GitGulf: @unchecked Sendable {
 	private var formattedElapsedTime: String {
 		String(format: "%.2f", Date().timeIntervalSince(startTime))
 	}
-
-	/// Terminal width determined lazily by running 'tput cols'
-	private lazy var terminalWidth: Int = {
-		let process = Process()
-		process.executableURL = URL(fileURLWithPath: "/usr/bin/tput")
-		process.arguments = ["cols"]
-
-		let pipe = Pipe()
-		process.standardOutput = pipe
-
-		do {
-			try process.run()
-			process.waitUntilExit()
-
-			let data = pipe.fileHandleForReading.readDataToEndOfFile()
-			if let output = String(data: data, encoding: .utf8),
-				 let width = Int(output.trimmingCharacters(in: .whitespacesAndNewlines)),
-				 width > 0 {
-				return width
-			}
-		} catch {
-			// Keep default width if tput fails
-		}
-
-		return 80 // Default width if tput fails
-	}()
-
+	
 	func run(gitCommand: GitCommand) async {
 		await repositoryManager.loadRepositories()
 		let repositories = await repositoryManager.repositories
-
-	await withTaskGroup(of: Void.self) { group in
-		for repository in repositories {
-			group.addTask {
-				do {
-					switch gitCommand {
-					case .status:
-						try await repository.status()
-					case .fetch:
-						try await repository.fetch()
-				case .pull:
-					try await repository.pull()
-				case .rebase:
-					try await repository.rebase()
-				case .checkout(let branch):
-						try await repository.checkout(branch: branch)
+		
+		await withTaskGroup(of: Void.self) { group in
+			for repository in repositories {
+				group.addTask {
+					do {
+						switch gitCommand {
+						case .status:
+							try await repository.status()
+						case .fetch:
+							try await repository.fetch()
+						case .pull:
+							try await repository.pull()
+						case .rebase:
+							try await repository.rebase()
+						case .checkout(let branch):
+							try await repository.checkout(branch: branch)
+						}
+					} catch {
+						// Silently fail - don't disrupt the UI output
 					}
-				} catch {
-					// Silently fail - don't disrupt the UI output
-				}
-
-				await MainActor.run {
-					repository.colorState = true
-					self.updateUI()
+					
+					await MainActor.run {
+						repository.colorState = true
+						self.updateUI()
+					}
 				}
 			}
 		}
-	}
-
+		
 		await MainActor.run {
 			self.updateUI(finalFrame: true)
 		}
-
+		
 		resetTerminalTextFormatting()
 	}
-
+	
 	@MainActor func updateUI(finalFrame: Bool = false) {
 		let frame = composer.render(repositories: Array(repositoryManager.repositories), useANSIColors: isInteractive)
 		print(frame, terminator: "")
@@ -103,19 +84,19 @@ public class GitGulf: @unchecked Sendable {
 			print("")
 		}
 	}
-
+	
 	public func status() async {
 		print("GitGulf: Status check:\n")
 		await run(gitCommand: .status)
 		print("Status check took \(formattedElapsedTime) seconds to complete.")
 	}
-
+	
 	public func fetch() async {
 		print("GitGulf: Fetch operation:\n")
 		await run(gitCommand: .fetch)
 		print("Fetch operation took \(formattedElapsedTime) seconds to complete.")
 	}
-
+	
 	public func pull() async {
 		print("GitGulf: Pull operation:\n")
 		await run(gitCommand: .pull)
@@ -126,22 +107,22 @@ public class GitGulf: @unchecked Sendable {
 		await run(gitCommand: .rebase)
 		print("Pull --rebase operation took \(formattedElapsedTime) seconds to complete.")
 	}
-
+	
 	public func checkout(branch: String) async {
 		print("GitGulf: Switched to branch \(branch):\n")
 		await run(gitCommand: .checkout(branch))
 		print("Switching to branch \(branch) took \(formattedElapsedTime) seconds to complete.")
 	}
-
+	
 	func moveCursorUp(nrOfLines: Int) {
 		print("\u{1B}[\(nrOfLines)A", terminator: "")
 	}
-
+	
 	@MainActor func debugState() {
 		let sortedRepositories = repositoryManager
 			.repositories
 			.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-
+		
 		sortedRepositories.forEach { repository in
 			print(
 				repository.name,
@@ -152,7 +133,7 @@ public class GitGulf: @unchecked Sendable {
 			)
 		}
 	}
-
+	
 	func resetTerminalTextFormatting() {
 		print("\u{001B}[0m")
 	}

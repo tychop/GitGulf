@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Dispatch
 
 class Repository: Hashable, @unchecked Sendable {
 	let name: String
