@@ -120,10 +120,8 @@ jobs:
           
           # Get checksums
           MACOS_SHA=$(shasum -a 256 ../release-assets/gitgulf-macos-arm64 | cut -d' ' -f1)
-          LINUX_AMD64_SHA=$(shasum -a 256 ../release-assets/gitgulf-linux-amd64 | cut -d' ' -f1)
-          LINUX_ARM64_SHA=$(shasum -a 256 ../release-assets/gitgulf-linux-arm64 | cut -d' ' -f1)
           
-          # Create formula
+          # Create formula (macOS only)
           cat > Formula/gitgulf.rb << 'EOF'
           class Gitgulf < Formula
             desc "Manage multiple git repositories from a single directory"
@@ -137,19 +135,8 @@ jobs:
               end
             end
           
-            on_linux do
-              on_intel do
-                url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-linux-amd64"
-                sha256 "$LINUX_AMD64_SHA"
-              end
-              on_arm do
-                url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-linux-arm64"
-                sha256 "$LINUX_ARM64_SHA"
-              end
-            end
-          
             def install
-              bin.install "gitgulf-#{os.mac? ? 'macos' : 'linux'}-#{Hardware::CPU.arm? ? 'arm64' : 'amd64'}" => "gitgulf"
+              bin.install "gitgulf-macos-arm64" => "gitgulf"
             end
           
             test do
@@ -161,8 +148,6 @@ jobs:
           # Update checksums in formula
           sed -i "s/\$VERSION/$VERSION/g" Formula/gitgulf.rb
           sed -i "s/\$MACOS_SHA/$MACOS_SHA/g" Formula/gitgulf.rb
-          sed -i "s/\$LINUX_AMD64_SHA/$LINUX_AMD64_SHA/g" Formula/gitgulf.rb
-          sed -i "s/\$LINUX_ARM64_SHA/$LINUX_ARM64_SHA/g" Formula/gitgulf.rb
 
       - name: Commit and push to homebrew-gitgulf
         run: |
