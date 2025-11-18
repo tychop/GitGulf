@@ -53,11 +53,16 @@ jobs:
             swift:5.10 \
             bash -c "cd /workspace && swift build -c release"
 
+      - name: Copy binary to versioned artifact
+        run: |
+          mkdir -p artifacts
+          cp .build/release/gitgulf artifacts/gitgulf-linux-${{ matrix.arch }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: gitgulf-linux-${{ matrix.arch }}
-          path: .build/release/gitgulf
+          path: artifacts/gitgulf-linux-${{ matrix.arch }}
 
   create-release:
     name: Create Release and Update Homebrew
@@ -76,8 +81,8 @@ jobs:
         run: |
           mkdir -p release-assets
           cp artifacts/gitgulf-macos-arm64/gitgulf release-assets/gitgulf-macos-arm64
-          cp artifacts/gitgulf-linux-amd64/gitgulf release-assets/gitgulf-linux-amd64
-          cp artifacts/gitgulf-linux-arm64/gitgulf release-assets/gitgulf-linux-arm64
+          cp artifacts/gitgulf-linux-amd64/* release-assets/gitgulf-linux-amd64 2>/dev/null || cp artifacts/gitgulf-linux-amd64/gitgulf release-assets/gitgulf-linux-amd64
+          cp artifacts/gitgulf-linux-arm64/* release-assets/gitgulf-linux-arm64 2>/dev/null || cp artifacts/gitgulf-linux-arm64/gitgulf release-assets/gitgulf-linux-arm64
           chmod +x release-assets/*
 
       - name: Generate checksums
