@@ -1,5 +1,7 @@
 name: Release
 
+# See .github/workflows/RELEASE_WORKFLOW.md for documentation on how this workflow works
+
 on:
   push:
     tags:
@@ -102,6 +104,7 @@ jobs:
             release-assets/checksums.txt
           draft: false
           prerelease: false
+          generate_release_notes: true
 
       - name: Checkout homebrew-gitgulf
         uses: actions/checkout@v4
