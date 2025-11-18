@@ -1,0 +1,169 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - runner: macos-latest-xlarge
+            target: macos-arm64
+            build_cmd: swift build -c release
+            binary_path: .build/release/gitgulf
+            artifact_name: gitgulf-macos-arm64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build ${{ matrix.target }}
+        run: ${{ matrix.build_cmd }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.binary_path }}
+
+  build-linux:
+    name: Build Linux Binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch:
+          - amd64
+          - arm64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up QEMU (for ARM64)
+        if: matrix.arch == 'arm64'
+        uses: docker/setup-qemu-action@v3
+
+      - name: Build Linux ${{ matrix.arch }}
+        run: |
+          docker run --platform linux/${{ matrix.arch }} \
+            -v ${{ github.workspace }}:/workspace \
+            swift:5.10 \
+            bash -c "cd /workspace && swift build -c release"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitgulf-linux-${{ matrix.arch }}
+          path: .build/release/gitgulf
+
+  create-release:
+    name: Create Release and Update Homebrew
+    needs: [build-and-release, build-linux]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Prepare binaries
+        run: |
+          mkdir -p release-assets
+          cp artifacts/gitgulf-macos-arm64/gitgulf release-assets/gitgulf-macos-arm64
+          cp artifacts/gitgulf-linux-amd64/gitgulf release-assets/gitgulf-linux-amd64
+          cp artifacts/gitgulf-linux-arm64/gitgulf release-assets/gitgulf-linux-arm64
+          chmod +x release-assets/*
+
+      - name: Generate checksums
+        run: |
+          cd release-assets
+          shasum -a 256 gitgulf-macos-arm64 > checksums.txt
+          shasum -a 256 gitgulf-linux-amd64 >> checksums.txt
+          shasum -a 256 gitgulf-linux-arm64 >> checksums.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release-assets/gitgulf-macos-arm64
+            release-assets/gitgulf-linux-amd64
+            release-assets/gitgulf-linux-arm64
+            release-assets/checksums.txt
+          draft: false
+          prerelease: false
+
+      - name: Checkout homebrew-gitgulf
+        uses: actions/checkout@v4
+        with:
+          repository: tychop/homebrew-gitgulf
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: homebrew-gitgulf
+
+      - name: Update Homebrew formula
+        run: |
+          cd homebrew-gitgulf
+          
+          # Get the version from the tag
+          VERSION=${{ github.ref_name }}
+          VERSION=${VERSION#v}
+          
+          # Get checksums
+          MACOS_SHA=$(shasum -a 256 ../release-assets/gitgulf-macos-arm64 | cut -d' ' -f1)
+          LINUX_AMD64_SHA=$(shasum -a 256 ../release-assets/gitgulf-linux-amd64 | cut -d' ' -f1)
+          LINUX_ARM64_SHA=$(shasum -a 256 ../release-assets/gitgulf-linux-arm64 | cut -d' ' -f1)
+          
+          # Create formula
+          cat > Formula/gitgulf.rb << 'EOF'
+          class Gitgulf < Formula
+            desc "Manage multiple git repositories from a single directory"
+            homepage "https://github.com/tychop/GitGulf"
+            version "$VERSION"
+          
+            on_macos do
+              on_arm do
+                url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-macos-arm64"
+                sha256 "$MACOS_SHA"
+              end
+            end
+          
+            on_linux do
+              on_intel do
+                url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-linux-amd64"
+                sha256 "$LINUX_AMD64_SHA"
+              end
+              on_arm do
+                url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-linux-arm64"
+                sha256 "$LINUX_ARM64_SHA"
+              end
+            end
+          
+            def install
+              bin.install "gitgulf-#{os.mac? ? 'macos' : 'linux'}-#{Hardware::CPU.arm? ? 'arm64' : 'amd64'}" => "gitgulf"
+            end
+          
+            test do
+              system "#{bin}/gitgulf", "--version"
+            end
+          end
+          EOF
+          
+          # Update checksums in formula
+          sed -i "s/\$VERSION/$VERSION/g" Formula/gitgulf.rb
+          sed -i "s/\$MACOS_SHA/$MACOS_SHA/g" Formula/gitgulf.rb
+          sed -i "s/\$LINUX_AMD64_SHA/$LINUX_AMD64_SHA/g" Formula/gitgulf.rb
+          sed -i "s/\$LINUX_ARM64_SHA/$LINUX_ARM64_SHA/g" Formula/gitgulf.rb
+
+      - name: Commit and push to homebrew-gitgulf
+        run: |
+          cd homebrew-gitgulf
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add Formula/gitgulf.rb
+          git commit -m "Update gitgulf to ${{ github.ref_name }}"
+          git push
