@@ -35,6 +35,62 @@ class LinuxCompatibilityTests: XCTestCase {
 		XCTAssertTrue(narrowTable.contains("TestRepo"))
 		XCTAssertTrue(narrowTable.contains("main"))
 	}
+
+	func testTableLinesArePaddedToTerminalWidth() {
+		// Verify that rendered lines are precisely padded to the requested width
+		let repo = Repository(name: "Repo", path: "/test")
+		repo.branch = "m"
+		repo.ahead = "0"
+		repo.behind = "0"
+		repo.changes = "0"
+		repo.colorState = true
+		
+		let renderer = UIRenderer()
+		// Use realistic widths that accommodate the minimum table structure
+		let targetWidths = [80, 120, 160]
+		
+		for width in targetWidths {
+			let frame = renderer.render(repositories: [repo], terminalWidth: width, useANSIColors: false)
+			let lines = frame.split(separator: "\n").map(String.init)
+			
+			// All lines (including header, divider, data) should be padded to the exact width
+			for (index, line) in lines.enumerated() {
+				let visibleLength = line.characterCountExcludingANSIEscapeCodes
+				XCTAssertEqual(visibleLength, width, "Line \(index) should be exactly \(width) characters wide (visible), got \(visibleLength)")
+			}
+		}
+	}
+
+	func testResizingTerminalWidthOverwritesOlderContent() {
+		// Simulate: render at narrow width, then wide width → confirms rows get extended with padding
+		let repo = Repository(name: "Repo", path: "/test")
+		repo.branch = "m"
+		repo.ahead = "0"
+		repo.behind = "0"
+		repo.changes = "0"
+		repo.colorState = true
+		
+		let renderer = UIRenderer()
+		let narrowWidth = 80
+		let wideWidth = 140
+		
+		let narrow = renderer.render(repositories: [repo], terminalWidth: narrowWidth, useANSIColors: false)
+		let wide = renderer.render(repositories: [repo], terminalWidth: wideWidth, useANSIColors: false)
+		
+		let narrowLines = narrow.split(separator: "\n").map(String.init)
+		let wideLines = wide.split(separator: "\n").map(String.init)
+		
+		// Each line should match its requested width exactly
+		for narrowLine in narrowLines {
+			let narrowVisible = narrowLine.characterCountExcludingANSIEscapeCodes
+			XCTAssertEqual(narrowVisible, narrowWidth)
+		}
+		
+		for wideLine in wideLines {
+			let wideVisible = wideLine.characterCountExcludingANSIEscapeCodes
+			XCTAssertEqual(wideVisible, wideWidth)
+		}
+	}
 	
 	/// Test that shell commands work on cross-platform paths
 	func testShellExecuteCrossPlatform() async throws {
