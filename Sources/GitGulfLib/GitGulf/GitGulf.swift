@@ -75,32 +75,14 @@ public class GitGulf: @unchecked Sendable {
 		resetTerminalTextFormatting()
 	}
 	
-@MainActor func updateUI(finalFrame: Bool = false) {
-		let width = detectTerminalWidth()
-		let frame = composer.render(
-			repositories: Array(repositoryManager.repositories),
-			terminalWidth: width,
-			useANSIColors: isInteractive
-		)
+	@MainActor func updateUI(finalFrame: Bool = false) {
+		let frame = composer.render(repositories: Array(repositoryManager.repositories), useANSIColors: isInteractive)
 		print(frame, terminator: "")
 		if finalFrame == false && isInteractive {
 			moveCursorUp(nrOfLines: frame.split(separator: "\n").count)
 		} else if finalFrame == false {
 			print("")
 		}
-	}
-
-	private func detectTerminalWidth() -> Int {
-		// Prefer COLUMNS if explicitly set (helps in tests / scripted environments)
-		if let columns = ProcessInfo.processInfo.environment["COLUMNS"],
-		   let value = Int(columns), value > 0 {
-			return value
-		}
-
-		// Otherwise, query the actual terminal size via ioctl(TIOCGWINSZ)
-		var w = winsize()
-		_ = ioctl(STDOUT_FILENO, TIOCGWINSZ, &w)
-		return Int(w.ws_col)
 	}
 	
 	public func status() async {
