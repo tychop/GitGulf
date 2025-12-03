@@ -128,6 +128,9 @@ jobs:
           # Get checksums
           MACOS_SHA=$(shasum -a 256 ../release-assets/gitgulf-macos-arm64 | cut -d' ' -f1)
           
+          # Create Formula directory if it doesn't exist
+          mkdir -p Formula
+          
           # Create formula (macOS only)
           cat > Formula/gitgulf.rb << EOF
           class Gitgulf < Formula
