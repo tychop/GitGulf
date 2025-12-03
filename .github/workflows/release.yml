@@ -110,7 +110,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: tychop/homebrew-gitgulf
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.HOMEBREW_GITHUB_TOKEN }}
           path: homebrew-gitgulf
 
       - name: Update Homebrew formula
