@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-release:
     name: Build and Release
-    runs-on: ${{ matrix.runner }}
+    runs-on: self-hosted
     strategy:
       matrix:
         include:
