@@ -132,21 +132,60 @@ jobs:
           mkdir -p Formula
           
           # Create formula (macOS only)
-          cat > Formula/gitgulf.rb << EOF
+          cat > Formula/gitgulf.rb << 'EOF'
           class Gitgulf < Formula
             desc "Manage multiple git repositories from a single directory"
             homepage "https://github.com/tychop/GitGulf"
-            version "${VERSION}"
+            version "VERSION_PLACEHOLDER"
           
             on_macos do
               on_arm do
                 url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-macos-arm64"
-                sha256 "${MACOS_SHA}"
+                sha256 "SHA_PLACEHOLDER"
               end
             end
           
             def install
               bin.install "gitgulf-macos-arm64" => "gitgulf"
+          
+              # Alias installations
+              (bin/"ggs").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" status "$@"
+              EOS
+              (bin/"ggf").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" fetch "$@"
+              EOS
+              (bin/"ggp").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" pull "$@"
+              EOS
+              (bin/"ggpr").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" rebase "$@"
+              EOS
+              (bin/"ggd").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" development "$@"
+              EOS
+              (bin/"ggm").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" master "$@"
+              EOS
+              (bin/"ggb").write <<~EOS
+                #!/bin/bash
+                "#{bin}/gitgulf" -b "$@"
+              EOS
+          
+              # Make the scripts executable
+              (bin/"ggs").chmod 0755
+              (bin/"ggf").chmod 0755
+              (bin/"ggp").chmod 0755
+              (bin/"ggpr").chmod 0755
+              (bin/"ggd").chmod 0755
+              (bin/"ggm").chmod 0755
+              (bin/"ggb").chmod 0755
             end
           
             test do
@@ -154,6 +193,11 @@ jobs:
             end
           end
           EOF
+          
+          # Replace placeholders
+          sed -i.bak "s/VERSION_PLACEHOLDER/${VERSION}/g" Formula/gitgulf.rb
+          sed -i.bak "s/SHA_PLACEHOLDER/${MACOS_SHA}/g" Formula/gitgulf.rb
+          rm Formula/gitgulf.rb.bak
 
       - name: Commit and push to homebrew-gitgulf
         run: |
