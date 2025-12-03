@@ -18,7 +18,7 @@ class UIRendererTests: XCTestCase {
 		XCTAssertTrue(frame.contains("Branch"))
 	}
 
-	func testColorStateLoading() {
+	func testColorStateLoadingRendersWithIncompleteState() {
 		let repo = Repository(name: "LoadingRepo", path: "/test/loading")
 		repo.branch = "develop"
 		repo.colorState = false
@@ -57,13 +57,27 @@ class UIRendererTests: XCTestCase {
 
 		let renderer = UIRenderer()
 		let frame = renderer.render(repositories: [repo], useANSIColors: false)
+		// Verify presence of values in the rendered table
 		XCTAssertTrue(frame.contains("TestRepo"))
+		XCTAssertTrue(frame.contains("main"))
+		XCTAssertTrue(frame.contains("5"), "Ahead value should be rendered")
+		XCTAssertTrue(frame.contains("3"), "Behind value should be rendered")
+		XCTAssertTrue(frame.contains("2"), "Changes value should be rendered")
 	}
 
 	func testEmptyRepositoryList() {
 		let renderer = UIRenderer()
 		let frame = renderer.render(repositories: [], useANSIColors: false)
+		// Header present
 		XCTAssertTrue(frame.contains("Repository Name"))
+		// Split lines: expect header + divider only
+		let lines = frame.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+		XCTAssertGreaterThanOrEqual(lines.count, 2, "Should render header and divider for empty list")
+		// No data rows after divider
+		if lines.count > 2 {
+			let dataRows = lines.dropFirst(2).filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
+			XCTAssertTrue(dataRows.isEmpty, "No repository rows should be rendered")
+		}
 	}
 
 	func testANSIColorsDisabled() {

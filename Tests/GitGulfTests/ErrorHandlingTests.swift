@@ -22,12 +22,21 @@ class ErrorHandlingTests: XCTestCase {
 	}
 
 	/// Test that repository operations fail gracefully with proper error wrapping
-	func testRepositoryErrorWrapping() {
-		let repo = Repository(name: "TestRepo", path: "/test")
-
-		// Verify error types are properly defined
-		XCTAssertNotNil(repo.name)
-		XCTAssertNotNil(repo.path)
+	func testRepositoryErrorWrapping() async {
+		let repo = Repository(name: "Invalid", path: "/definitely/not/a/repo")
+		do {
+			try await repo.status()
+			XCTFail("Expected error for invalid repo path")
+		} catch let error as ShellError {
+			switch error {
+			case .executionFailed:
+				XCTAssertTrue(true)
+			case .timeout, .interrupted, .outputTooLarge, .outputDecodingFailed, .invalidWorkingDirectory, .outputReadError, .processSetupError:
+				XCTAssertTrue(true)
+			}
+		} catch {
+			XCTFail("Unexpected error type: \(error)")
+		}
 	}
 
 	/// Test that checkout validates branch names before execution
@@ -46,31 +55,10 @@ class ErrorHandlingTests: XCTestCase {
 	}
 
 	/// Test RepositoryManager handles empty directory gracefully
-	func testRepositoryManagerEmptyDirectory() async {
-		await MainActor.run {
-			let manager = RepositoryManager()
-			XCTAssertTrue(manager.repositories.isEmpty)
-		}
-	}
 
 	/// Test RepositoryManager skips hidden directories
-	func testRepositoryManagerSkipsHiddenDirectories() async {
-		await MainActor.run {
-			let manager = RepositoryManager()
-			// Hidden directories starting with '.' should not be scanned
-			// This is enforced by the internal processDirectory logic
-			XCTAssertNotNil(manager)
-		}
-	}
 
 	/// Test RepositoryManager skips symlinks
-	func testRepositoryManagerSkipsSymlinks() async {
-		await MainActor.run {
-			let manager = RepositoryManager()
-			// Symlinks should be filtered during directory scanning
-			XCTAssertNotNil(manager)
-		}
-	}
 
 	/// Test that repository with zero values displays correctly
 	func testRepositoryZeroValuesDisplay() {
@@ -150,20 +138,17 @@ class ErrorHandlingTests: XCTestCase {
 	}
 
 	/// Test shell output size limit enforcement
-	func testShellOutputSizeLimit() async throws {
-		let options = ShellOptions(maxOutputSize: 5)
+	func testShellOutputSizeLimit() async {
+		let options = ShellOptions(maxOutputSize: 10)
 		do {
-			_ = try await Shell.execute(["echo", "This is a very long string"], options: options)
-			// May not fail immediately - depends on implementation
-			// But the test confirms the option is accepted
-			XCTAssertTrue(true)
-		} catch let error as ShellError {
-			if case .outputTooLarge = error {
-				XCTAssertTrue(true)
-			} else {
-				// If it doesn't fail, that's also valid behavior
-				XCTAssertTrue(true)
+			_ = try await Shell.execute(["sh", "-c", "yes | head -100"], options: options)
+			XCTFail("Expected outputTooLarge error")
+	} catch let error as ShellError {
+			guard case .outputTooLarge = error else {
+				return XCTFail("Expected outputTooLarge, got \(error)")
 			}
+		} catch {
+			XCTFail("Unexpected error type: \(error)")
 		}
 	}
 
@@ -213,18 +198,28 @@ class ErrorHandlingTests: XCTestCase {
 
 	/// Test various branch names in checkout
 	func testCheckoutWithVariousBranchNames() async throws {
-		let repo = Repository(name: "TestRepo", path: "/test")
+		let fm = FileManager.default
+		let tempRoot = (NSTemporaryDirectory() as NSString).appendingPathComponent(UUID().uuidString)
+		try fm.createDirectory(atPath: tempRoot, withIntermediateDirectories: true)
+		_ = try await Shell.execute(["git", "-C", tempRoot, "init"])
+		try "init\n".write(toFile: (tempRoot as NSString).appendingPathComponent("README.md"), atomically: true, encoding: .utf8)
+		_ = try await Shell.execute(["git", "-C", tempRoot, "add", "."])
+		_ = try await Shell.execute(["git", "-C", tempRoot, "commit", "-m", "init"])
+		_ = try await Shell.execute(["git", "-C", tempRoot, "checkout", "-b", "feature-123"])
 
-		// Valid-looking branch names should be accepted by the validation
-		// (They may fail in git if invalid, but validation passes them through)
-		let branchNames = [
-			"feature-123",
-			"release/v1.0.0",
-		]
+		let repo = Repository(name: "Temp", path: tempRoot)
+		try? await repo.checkout(branch: "feature-123")
+		// This might fail after validation if branch doesn't exist; but validation should allow the string
+		_ = try? await repo.checkout(branch: "main")
 
-		for _ in branchNames {
-			XCTAssertNotNil(repo)
-		}
+		await XCTAssertThrowsErrorAsync(try await repo.checkout(branch: "branch; rm -rf /"))
+	}
+
+	private func XCTAssertThrowsErrorAsync<T>(_ expression: @autoclosure @escaping () async throws -> T) async {
+		do {
+			_ = try await expression()
+			XCTFail("Expected throw")
+		} catch { /* expected */ }
 	}
 
 	/// Test repository state is thread-safe

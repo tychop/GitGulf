@@ -2,80 +2,44 @@ import XCTest
 @testable import GitGulfLib
 
 class GitGulfOrchestrationTests: XCTestCase {
+	private func withTempCWD<T>(_ body: () async throws -> T) async throws -> T {
+		let fm = FileManager.default
+		let temp = (NSTemporaryDirectory() as NSString).appendingPathComponent(UUID().uuidString)
+		try fm.createDirectory(atPath: temp, withIntermediateDirectories: true)
+		let original = fm.currentDirectoryPath
+		fm.changeCurrentDirectoryPath(temp)
+		defer { fm.changeCurrentDirectoryPath(original) }
+		return try await body()
+	}
+
 	func testGitGulfInitialization() async {
 		let gitGulf = GitGulf()
 		XCTAssertNotNil(gitGulf)
 	}
 
-	func testGitGulfHasRepositoryManager() async {
-		let gitGulf = GitGulf()
-		XCTAssertNotNil(gitGulf)
-	}
-
-	func testGitGulfStatusCommand() async {
-		let gitGulf = GitGulf()
-		_ = gitGulf
-		XCTAssertTrue(true)
-	}
-
-	func testGitGulfFetchCommand() async {
-		let gitGulf = GitGulf()
-		_ = gitGulf
-		XCTAssertTrue(true)
-	}
-
-	func testGitGulfPullCommand() async {
-		let gitGulf = GitGulf()
-		_ = gitGulf
-		XCTAssertTrue(true)
-	}
-
-	func testGitGulfRebaseCommand() async {
-		let gitGulf = GitGulf()
-		_ = gitGulf
-		XCTAssertTrue(true)
-	}
-
-	func testGitGulfCheckoutCommand() async {
-		let gitGulf = GitGulf()
-		_ = gitGulf
-		XCTAssertTrue(true)
-	}
-
-	func testGitGulfPublicAPI() async {
-		let gitGulf = GitGulf()
-
-		await MainActor.run {
-			XCTAssertNotNil(gitGulf)
-		}
-	}
-
-	func testGitGulfIsMainActor() async {
-		let gitGulf = GitGulf()
-
-		await MainActor.run {
-			_ = gitGulf
+	func testGitGulfStatusCommandCompletes() async throws {
+		try await withTempCWD {
+			let g = GitGulf()
+			await g.status()
 			XCTAssertTrue(true)
 		}
 	}
 
-	func testGitGulfConcurrency() async {
-		let gitGulf = GitGulf()
+	func testGitGulfFetchPullRebaseComplete() async throws {
+		try await withTempCWD {
+			let g = GitGulf()
+			await g.fetch()
+			await g.pull()
+			await g.rebase()
+			XCTAssertTrue(true)
+		}
+	}
 
-		async let task1 = {
-			_ = gitGulf
-			return 1
-		}()
-
-		async let task2 = {
-			_ = gitGulf
-			return 2
-		}()
-
-		let result1 = await task1
-		let result2 = await task2
-
-		XCTAssertEqual(result1, 1)
-		XCTAssertEqual(result2, 2)
+	func testGitGulfCheckoutCompletesOnEmptyDir() async throws {
+		try await withTempCWD {
+			let g = GitGulf()
+			await g.checkout(branch: "main")
+			XCTAssertTrue(true)
+		}
 	}
 }
