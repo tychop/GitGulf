@@ -112,7 +112,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: tychop/homebrew-gitgulf
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.HOMEBREW_GITGULF_TOKEN }}
           path: homebrew-gitgulf
 
       - name: Update Homebrew formula
@@ -194,6 +194,8 @@ jobs:
           sed -i "s/\$MACOS_SHA/$MACOS_SHA/g" Formula/gitgulf.rb
 
       - name: Commit and push to homebrew-gitgulf
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_GITGULF_TOKEN }}
         run: |
           cd homebrew-gitgulf
           git config user.name "GitHub Actions"
