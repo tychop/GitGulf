@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - runner: macos-latest-xlarge
+          - runner: [self-hosted, macos, arm64]
             target: macos-arm64
             build_cmd: swift build -c release
             binary_path: .build/release/gitgulf
