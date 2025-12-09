@@ -10,7 +10,7 @@ on:
 jobs:
   build-and-release:
     name: Build and Release
-    runs-on: self-hosted
+    runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
         include:
@@ -69,9 +69,7 @@ jobs:
   create-release:
     name: Create Release and Update Homebrew
     needs: [build-and-release, build-linux]
-    runs-on: self-hosted
-    permissions:
-      contents: write
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -107,14 +105,12 @@ jobs:
           draft: false
           prerelease: false
           generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout homebrew-gitgulf
         uses: actions/checkout@v4
         with:
           repository: tychop/homebrew-gitgulf
-          token: ${{ secrets.HOMEBREW_GITGULF_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           path: homebrew-gitgulf
 
       - name: Update Homebrew formula
@@ -128,20 +124,17 @@ jobs:
           # Get checksums
           MACOS_SHA=$(shasum -a 256 ../release-assets/gitgulf-macos-arm64 | cut -d' ' -f1)
           
-          # Create Formula directory if it doesn't exist
-          mkdir -p Formula
-          
-          # Create formula (macOS only)
+          # Create formula with aliases
           cat > Formula/gitgulf.rb << 'EOF'
           class Gitgulf < Formula
             desc "Manage multiple git repositories from a single directory"
             homepage "https://github.com/tychop/GitGulf"
-            version "VERSION_PLACEHOLDER"
+            version "$VERSION"
           
             on_macos do
               on_arm do
                 url "https://github.com/tychop/GitGulf/releases/download/v#{version}/gitgulf-macos-arm64"
-                sha256 "SHA_PLACEHOLDER"
+                sha256 "$MACOS_SHA"
               end
             end
           
@@ -194,10 +187,9 @@ jobs:
           end
           EOF
           
-          # Replace placeholders
-          sed -i.bak "s/VERSION_PLACEHOLDER/${VERSION}/g" Formula/gitgulf.rb
-          sed -i.bak "s/SHA_PLACEHOLDER/${MACOS_SHA}/g" Formula/gitgulf.rb
-          rm Formula/gitgulf.rb.bak
+          # Update checksums in formula
+          sed -i "s/\$VERSION/$VERSION/g" Formula/gitgulf.rb
+          sed -i "s/\$MACOS_SHA/$MACOS_SHA/g" Formula/gitgulf.rb
 
       - name: Commit and push to homebrew-gitgulf
         run: |
