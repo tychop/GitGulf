@@ -201,3 +201,4 @@ jobs:
           git add Formula/gitgulf.rb
           git commit -m "Update gitgulf to ${{ github.ref_name }}"
           git push
+        continue-on-error: true
