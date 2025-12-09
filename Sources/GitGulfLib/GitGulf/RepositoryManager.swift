@@ -56,14 +56,18 @@ class RepositoryManager {
 		guard fileManager.fileExists(atPath: gitPath) else { return }
 		
 		let repository = Repository(name: directory, path: directoryURL.path)
+		repository.colorState = false
 		
+		// Fetch branch name for initial display
 		do {
-			try await repository.status()
+			let branchOutput = try await Shell.execute("git", "-C", directoryURL.path, "rev-parse", "--abbrev-ref", "HEAD")
+			if branchOutput.status == 0 {
+				repository.branch = branchOutput.output.trimmingCharacters(in: .whitespacesAndNewlines)
+			}
 		} catch {
-			// Silently skip repos that can't be read
+			// Silently skip if we can't get branch
 			return
 		}
-		repository.colorState = false
 		
 		self.repositories.insert(repository)
 	}

@@ -40,6 +40,10 @@ public class GitGulf: @unchecked Sendable {
 		await repositoryManager.loadRepositories()
 		let repositories = await repositoryManager.repositories
 		
+		await MainActor.run {
+			self.updateUI()
+		}
+		
 		await withTaskGroup(of: Void.self) { group in
 			for repository in repositories {
 				group.addTask {
