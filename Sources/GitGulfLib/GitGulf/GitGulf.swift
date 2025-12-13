@@ -64,9 +64,13 @@ public class GitGulf: @unchecked Sendable {
 						// Silently fail - don't disrupt the UI output
 					}
 					
-					await MainActor.run {
+					// Update UI immediately as this repo completes
+					await MainActor.run { [weak self] in
+						guard let self = self else { return }
 						repository.colorState = true
 						self.updateUI()
+						// Explicitly flush output to ensure it appears immediately
+						fflush(stdout)
 					}
 				}
 			}
@@ -74,6 +78,8 @@ public class GitGulf: @unchecked Sendable {
 		
 		await MainActor.run {
 			self.updateUI(finalFrame: true)
+			// Flush final output
+			fflush(stdout)
 		}
 		
 		resetTerminalTextFormatting()
