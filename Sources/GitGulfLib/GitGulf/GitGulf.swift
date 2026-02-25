@@ -86,7 +86,8 @@ public class GitGulf: @unchecked Sendable {
 	}
 	
 	@MainActor func updateUI(finalFrame: Bool = false) {
-		let frame = composer.render(repositories: Array(repositoryManager.repositories), useANSIColors: isInteractive)
+		let terminalWidth = terminalWidth()
+		let frame = composer.render(repositories: Array(repositoryManager.repositories), terminalWidth: terminalWidth, useANSIColors: isInteractive)
 		print(frame, terminator: "")
 		if finalFrame == false && isInteractive {
 			moveCursorUp(nrOfLines: frame.split(separator: "\n").count)
@@ -124,6 +125,30 @@ public class GitGulf: @unchecked Sendable {
 		print("Switching to branch \(branch) took \(formattedElapsedTime) seconds to complete.")
 	}
 	
+	private func terminalWidth() -> Int {
+		// Attempt to get terminal width via ioctl(TIOCGWINSZ), fall back to COLUMNS env var, then 80
+		var cols: Int = 80
+		#if os(Linux)
+		var w = winsize()
+		if ioctl(STDOUT_FILENO, UInt(TIOCGWINSZ), &w) == 0 {
+			let c = Int(w.ws_col)
+			if c > 0 { cols = c }
+		}
+		#else
+		var w = winsize()
+		if ioctl(STDOUT_FILENO, TIOCGWINSZ, &w) == 0 {
+			let c = Int(w.ws_col)
+			if c > 0 { cols = c }
+		}
+		#endif
+
+		if let colsEnv = ProcessInfo.processInfo.environment["COLUMNS"], let c = Int(colsEnv) {
+			cols = c
+		}
+
+		return cols
+	}
+
 	func moveCursorUp(nrOfLines: Int) {
 		print("\u{1B}[\(nrOfLines)A", terminator: "")
 	}
