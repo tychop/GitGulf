@@ -106,6 +106,14 @@ class Repository: Hashable, @unchecked Sendable {
 			guard result.status == 0 else {
 				throw ShellError.executionFailed("Failed to checkout branch \(branch) for \(name): \(result.output)")
 			}
+
+			// Best-effort fetch to update remote tracking info; ignore failures
+			do {
+				let _ = try await Shell.execute("git", "-C", path, "fetch")
+			} catch {
+				// Ignore fetch errors - don't disrupt checkout
+			}
+
 			try await finish()
 		} catch {
 			throw ShellError.executionFailed("Checkout failed for \(name): \(error.localizedDescription)")
