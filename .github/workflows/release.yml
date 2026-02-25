@@ -154,10 +154,6 @@ jobs:
               EOS
               (bin/"ggp").write <<~EOS
                 #!/bin/bash
-                "#{bin}/gitgulf" pull "$@"
-              EOS
-              (bin/"ggpr").write <<~EOS
-                #!/bin/bash
                 "#{bin}/gitgulf" rebase "$@"
               EOS
               (bin/"ggd").write <<~EOS
@@ -177,7 +173,7 @@ jobs:
               (bin/"ggs").chmod 0755
               (bin/"ggf").chmod 0755
               (bin/"ggp").chmod 0755
-              (bin/"ggpr").chmod 0755
+              
               (bin/"ggd").chmod 0755
               (bin/"ggm").chmod 0755
               (bin/"ggb").chmod 0755

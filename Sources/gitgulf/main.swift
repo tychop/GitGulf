@@ -11,7 +11,7 @@ import GitGulfLib
 
 func run() async {
 	let arguments = CommandLine.arguments
-	let usageString = "Usage: gitgulf [ status | fetch | pull | rebase | development | master | -b branch | --version ]\nAbbreviations: ggs | ggf | ggp | ggpr | ggd | ggm | ggb"
+	let usageString = "Usage: gitgulf [ status | fetch | pull | rebase | development | master | -b branch | --version ]\nAbbreviations: ggs | ggf | ggp | ggd | ggm | ggb"
 
 	guard arguments.count > 1 else {
 		FileHandle.standardError.write("Error: No arguments provided. \(usageString)\n".data(using: .utf8) ?? Data())
@@ -22,7 +22,7 @@ func run() async {
 	let gitgulf = GitGulf()
 	
 	if argument == "--version" {
-		print("GitGulf v0.6.0")
+		print("GitGulf v0.6.1")
 		print("https://github.com/tychop/GitGulf")
 	} else if argument == "-b" {
 		guard arguments.count > 2 else {

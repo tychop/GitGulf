@@ -82,8 +82,7 @@ For quicker operations, use the abbreviated commands:
 ```
 ggs        : Show all the repository statuses.
 ggf        : Fetch all repositories.
-ggp        : Pull all repositories.
-ggpr       : Pull with rebase on all repositories.
+ggp        : Pull with rebase on all repositories.
 ggm        : Switch all repositories to the 'master' branch.
 ggd        : Switch all repositories to the 'development' branch.
 ggb BRANCH : Switch all repositories to the specified BRANCH.

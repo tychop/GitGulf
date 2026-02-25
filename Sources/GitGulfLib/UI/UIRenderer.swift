@@ -97,6 +97,11 @@ class UIRenderer {
 			line.append(String(repeating: backgroundCharacter, count: fillerWidth))
 		}
 
+		if useANSIColors {
+			// Append CSI "erase to end of line" so any trailing characters from previous frames are cleared
+			line.append("\u{001B}[K")
+		}
+
 		line.append("\n")
 		resultString.append(line)
 	}
