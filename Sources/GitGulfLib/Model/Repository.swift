@@ -43,7 +43,7 @@ class Repository: Hashable, @unchecked Sendable {
 		guard branchOutput.status == 0 else {
 			throw ShellError.executionFailed("Failed to get branch for \(name)")
 		}
-		stateQueue.async(flags: .barrier) { [weak self] in
+		stateQueue.sync(flags: .barrier) { [weak self] in
 			self?.branch = branchOutput.output
 		}
 
@@ -61,7 +61,7 @@ class Repository: Hashable, @unchecked Sendable {
 			if let aheadMatch = lineStr.range(of: "ahead\\s+\\d+", options: .regularExpression) {
 				let matchStr = String(lineStr[aheadMatch])
 				if let number = matchStr.split(separator: " ").last, let count = Int(number) {
-					stateQueue.async(flags: .barrier) { [weak self] in
+					stateQueue.sync(flags: .barrier) { [weak self] in
 						self?.ahead = String(count)
 					}
 				}
@@ -70,7 +70,7 @@ class Repository: Hashable, @unchecked Sendable {
 			if let behindMatch = lineStr.range(of: "behind\\s+\\d+", options: .regularExpression) {
 				let matchStr = String(lineStr[behindMatch])
 				if let number = matchStr.split(separator: " ").last, let count = Int(number) {
-					stateQueue.async(flags: .barrier) { [weak self] in
+					stateQueue.sync(flags: .barrier) { [weak self] in
 						self?.behind = String(count)
 					}
 				}
@@ -85,12 +85,12 @@ class Repository: Hashable, @unchecked Sendable {
 		let changesStr = changesOutput.output.trimmingCharacters(in: .whitespacesAndNewlines)
 		let nrOfChanges = changesStr.isEmpty ? 0 : changesStr.split(separator: "\n").count
 		if nrOfChanges > 0 {
-			stateQueue.async(flags: .barrier) { [weak self] in
+			stateQueue.sync(flags: .barrier) { [weak self] in
 				self?.changes = "\(nrOfChanges)"
 			}
 		}
 
-		stateQueue.async(flags: .barrier) { [weak self] in
+		stateQueue.sync(flags: .barrier) { [weak self] in
 			self?.colorState = true
 		}
 	}
@@ -157,7 +157,7 @@ class Repository: Hashable, @unchecked Sendable {
 	}
 
 	func reset() {
-		stateQueue.async(flags: .barrier) { [weak self] in
+		stateQueue.sync(flags: .barrier) { [weak self] in
 			self?.ahead = "0"
 			self?.behind = "0"
 			self?.changes = "0"

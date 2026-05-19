@@ -56,6 +56,16 @@ class RepositoryTests: XCTestCase {
 		XCTAssertEqual(repo.colorState, true)
 	}
 
+	func testRepositoryResetUpdatesStateImmediately() {
+		let repo = Repository(name: "TestRepo", path: "/test/repo", ahead: "4", behind: "2", changes: "7")
+
+		repo.reset()
+
+		XCTAssertEqual(repo.ahead, "0")
+		XCTAssertEqual(repo.behind, "0")
+		XCTAssertEqual(repo.changes, "0")
+	}
+
 	func testRepositorySendableConformance() {
 		let repo = Repository(name: "TestRepo", path: "/test/repo")
 		let _: @Sendable () -> Void = {
